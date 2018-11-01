@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="icon_search">&#xf002;</string>
+    <string name="icon_history">&#x1F4DA;</string>
+    <string name="icon_setting">&#x2699;</string>
+</resources>

@@ -124,7 +124,7 @@
                     android:maxWidth="50dp"
                     android:maxHeight="50dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/Zapotec" />
+                    android:src="@drawable/zapotec" />
 
             </LinearLayout>
         </LinearLayout>
