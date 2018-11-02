@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.FragmentTransaction;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +14,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import com.shamanland.fonticon.FontIconDrawable;
+import com.shamanland.fonticon.FontIconTypefaceHolder;
 
 public class MainActivity  extends FragmentActivity implements
         ActionBar.TabListener {
@@ -24,7 +27,8 @@ public class MainActivity  extends FragmentActivity implements
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Application app = (Application)getApplication();
+        FontIconTypefaceHolder.init(getAssets(), "fontawesome-4.2.0.ttf");
+        //final Application app = (Application)getApplication();
         setContentView(R.layout.activity_main);
 
         appSectionsPagerAdapter = new AppSectionsPagerAdapter(
@@ -34,7 +38,7 @@ public class MainActivity  extends FragmentActivity implements
         actionBar.setHomeButtonEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        viewPager = (ViewPager) findViewById(R.id.main_page);
+        viewPager = findViewById(R.id.main_page);
         viewPager.setOffscreenPageLimit(appSectionsPagerAdapter.getCount());
         viewPager.setAdapter(appSectionsPagerAdapter);
 
@@ -126,14 +130,4 @@ public class MainActivity  extends FragmentActivity implements
 
     }
 
-    void installTheme(Activity activity) {
-        activity.setTheme(R.style.AppTheme);
-//        String theme = getPreferredTheme();
-//        if (theme.equals(PREF_UI_THEME_DARK)) {
-//            activity.setTheme(android.R.style.Theme_Holo);
-//        }
-//        else {
-//            activity.setTheme(android.R.style.Theme_Holo_Light_DarkActionBar);
-//        }
-    }
 }

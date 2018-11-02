@@ -2,6 +2,6 @@
 <font-icon
     xmlns:android="http://schemas.android.com/apk/res-auto"
     android:text="@string/icon_settings"
-    android:textSize="21dp"
+    android:textSize="@dimen/tab_icon"
     android:textColor="@color/tab_icon_color"
     />
