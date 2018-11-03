@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZapotecDictionary</string>
+    <string name="app_name">Zapotec</string>
     <string name="zapotec">Zapotec Pronunciation</string>
     <string name="def">Definition</string>
     <string name="wordDef">Word Definition</string>

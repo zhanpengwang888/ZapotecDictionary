@@ -5,6 +5,9 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Application;
 import android.app.FragmentTransaction;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.app.Fragment;
@@ -23,11 +26,11 @@ public class MainActivity  extends FragmentActivity implements
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
-    private ViewPager viewPager;
+    //private ViewPager viewPager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FontIconTypefaceHolder.init(getAssets(), "fontawesome-4.2.0.ttf");
+        //FontIconTypefaceHolder.init(getAssets(), "fontawesome-4.2.0.ttf");
         //final Application app = (Application)getApplication();
         setContentView(R.layout.activity_main);
 
@@ -37,10 +40,11 @@ public class MainActivity  extends FragmentActivity implements
         final ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        viewPager = findViewById(R.id.main_page);
-        viewPager.setOffscreenPageLimit(appSectionsPagerAdapter.getCount());
-        viewPager.setAdapter(appSectionsPagerAdapter);
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#91aaa7")));
+        actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#cedbda")));
+//        viewPager = findViewById(R.id.main_page);
+//        viewPager.setOffscreenPageLimit(appSectionsPagerAdapter.getCount());
+//        viewPager.setAdapter(appSectionsPagerAdapter);
 
         final String[] subtitles = new String[] {
                 getString(R.string.subtitle_search),
@@ -49,19 +53,19 @@ public class MainActivity  extends FragmentActivity implements
         };
 
         // sets the tabs for actionBar, needs to modified `subtitles`
-        viewPager
-                .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        actionBar.setSelectedNavigationItem(position);
-                        actionBar.setSubtitle(subtitles[position]);
-                    }
-                });
+//        viewPager
+//                .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+//                    @Override
+//                    public void onPageSelected(int position) {
+//                        actionBar.setSelectedNavigationItem(position);
+//                        actionBar.setSubtitle(subtitles[position]);
+//                    }
+//                });
 
         Drawable[] tabIcons = new Drawable[3];
-        tabIcons[0] = FontIconDrawable.inflate(this, R.xml.icon_search);
-        tabIcons[1] = FontIconDrawable.inflate(this, R.xml.icon_history);
-        tabIcons[2] = FontIconDrawable.inflate(this, R.xml.icon_settings);
+        tabIcons[0] = getResources().getDrawable(R.drawable.lookup);
+        tabIcons[1] = getResources().getDrawable(R.drawable.history);
+        tabIcons[2] = getResources().getDrawable(R.drawable.settings);
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < appSectionsPagerAdapter.getCount(); i++) {
             ActionBar.Tab tab = actionBar.newTab();
@@ -73,7 +77,7 @@ public class MainActivity  extends FragmentActivity implements
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
         } else {
-            viewPager.setCurrentItem(0);
+            //viewPager.setCurrentItem(0);
         }
     }
 //
