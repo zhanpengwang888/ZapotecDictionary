@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -56,36 +57,17 @@ public class MainActivity  extends FragmentActivity {
 
     }
 
-//    public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-//        private Fragment[] frags;
-//        SearchFragment tabSearch;
-//        HistoryFragment tabHistory;
-//        SettingsFragment tabSettings;
-//
-//        public AppSectionsPagerAdapter(FragmentManager fm) {
-//            super(fm);
-//            tabSearch = new SearchFragment();
-//            tabHistory = new HistoryFragment();
-//            tabSettings = new SettingsFragment();
-//
-//            frags = new Fragment[] { tabSearch, tabHistory, tabSearch };
-//        }
-//
-//        @Override
-//        public Fragment getItem(int i) {
-//            return frags[i];
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return frags.length;
-//        }
-//
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            return "";
-//        }
-//
-//    }
-
 }
+
+class DownloadData extends AsyncTask<String, Void, Void> {
+
+    public DownloadData() {
+
+    }
+
+    @Override
+    protected Void doInBackground(String... strings) {
+        return null;
+    }
+}
+
