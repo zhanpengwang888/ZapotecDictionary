@@ -2,14 +2,26 @@ package edu.haverford.cs.zapotecdictionary;
 
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 
 public class MainActivity  extends FragmentActivity {
@@ -22,6 +34,10 @@ public class MainActivity  extends FragmentActivity {
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
         }
+
+        String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
+
+        DownloadData downloadData = new DownloadData(getApplicationContext(), url);
 
         final ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -60,13 +76,71 @@ public class MainActivity  extends FragmentActivity {
 }
 
 class DownloadData extends AsyncTask<String, Void, Void> {
+    public ZapotecDictionaryDBHelper db;
+    private static HttpURLConnection con;
+    private String urlStr;
 
-    public DownloadData() {
-
+    public DownloadData(Context context, String url) {
+        db = new ZapotecDictionaryDBHelper(context);
+        this.urlStr = url;
+        con = null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    protected Void doInBackground(String... strings) {
+    protected Void doInBackground(String... strings){
+        String urlParameters = "dict=tlacochahuaya&export=TRUE&dl_type=1";
+        byte[] data = urlParameters.getBytes(StandardCharsets.UTF_8);
+        byte[] buffer = new byte[1024];
+        int dataSize = 0;
+
+        InputStream in = null;
+        FileOutputStream out = null;
+
+        try {
+            URL url = new URL(urlStr);
+            con = (HttpURLConnection) url.openConnection();
+
+            // provide parameters required for POST request
+            try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+                wr.write(data);
+            } catch (Exception e) {
+                Log.e("bg0", "Error writing post msg");
+                e.printStackTrace();
+            }
+
+            in = con.getInputStream();
+            out = new FileOutputStream("update.zip");
+
+            dataSize = in.read(buffer);
+            while(dataSize > 0) {
+                out.write(buffer, 0, dataSize);
+                dataSize = in.read(buffer);
+            }
+            out.flush();
+        } catch (Exception e) {
+            Log.e("bg1", "Error making connection");
+            e.printStackTrace();
+        } finally {
+            if(con != null) {
+                con.disconnect();
+            }
+            if(in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return null;
     }
 }
