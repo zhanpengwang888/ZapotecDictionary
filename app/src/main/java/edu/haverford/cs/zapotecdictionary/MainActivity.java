@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,13 +17,13 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 
 public class MainActivity  extends FragmentActivity {
@@ -92,7 +93,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... strings){
         String urlParameters = "dict=tlacochahuaya&export=TRUE&dl_type=1";
-        byte[] data = urlParameters.getBytes(StandardCharsets.UTF_8);
+        byte[] data = urlParameters.getBytes(Charset.defaultCharset());
         byte[] buffer = new byte[1024];
         int dataSize = 0;
 
@@ -102,6 +103,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         try {
             URL url = new URL(urlStr);
             con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
 
             // provide parameters required for POST request
             try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
@@ -112,9 +114,13 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             }
 
             in = con.getInputStream();
-            out = new FileOutputStream("update.zip");
+            File path = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS);
+            File file = new File(path, "update.zip");
+            out = new FileOutputStream(file, true);
 
             dataSize = in.read(buffer);
+            Log.e("------------------ filepath", file.getAbsolutePath());
             Log.e("----------------------- cur size" , Integer.toString(dataSize));
             while(dataSize > 0) {
                 Log.e("----------------------- cur size" , Integer.toString(dataSize));
