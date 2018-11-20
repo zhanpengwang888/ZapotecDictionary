@@ -4,7 +4,8 @@
     <string name="def">Definition</string>
     <string name="wordDef">Word Definition</string>
     <string name="pic">Picture</string>
-    <string name="subtitle_search">Search Words</string>
+    <string name="subtitle_search">Search</string>
     <string name="subtitle_history">History</string>
     <string name="subtitle_settings">Settings</string>
+    <string name="subtitle_word_of_day">WordOfDay</string>
 </resources>

@@ -1,30 +1,14 @@
 package edu.haverford.cs.zapotecdictionary;
 
 
-
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.Application;
-import android.app.FragmentTransaction;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import com.shamanland.fonticon.FontIconDrawable;
-
-
-
-import java.util.Set;
 
 
 public class MainActivity  extends FragmentActivity {
@@ -63,6 +47,13 @@ public class MainActivity  extends FragmentActivity {
         tab3.setIcon(getResources().getDrawable(R.drawable.settings));
         tab3.setTabListener(new FragmentTabListener<SettingsFragment>(this, "Settings", SettingsFragment.class));
         actionBar.addTab(tab3);
+
+        FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
+        Fragment wordDay = new WordOfDayFragment();
+        transaction.add(android.R.id.content, wordDay, "WordOfDay");
+        transaction.commit();
+
     }
 
 //    public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {

@@ -11,6 +11,7 @@ public class SearchFragment extends Fragment {
         super();
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
         return inflater.inflate(R.layout.word_view, container, false);
@@ -22,6 +23,7 @@ public class SearchFragment extends Fragment {
         if(savedInstanceState != null) {
             onViewStateRestored(savedInstanceState);
         }
+
     }
 
 }

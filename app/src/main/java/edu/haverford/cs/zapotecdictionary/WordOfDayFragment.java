@@ -6,15 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SettingsFragment extends Fragment {
+public class WordOfDayFragment extends Fragment {
 
-    public SettingsFragment () {
+    public WordOfDayFragment() {
         super();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
-        return inflater.inflate(R.layout.settings, container, false);
+        return inflater.inflate(R.layout.word_of_day, container, false);
     }
 
     @Override
@@ -24,6 +24,4 @@ public class SettingsFragment extends Fragment {
             onViewStateRestored(savedInstanceState);
         }
     }
-
-
 }

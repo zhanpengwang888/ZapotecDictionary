@@ -2,12 +2,13 @@ package edu.haverford.cs.zapotecdictionary;
 
 // reference: https://gist.github.com/nesquena/f54a991ccb4e5929e0ec
 
-import android.os.Bundle;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 public class FragmentTabListener<T extends Fragment> implements TabListener {
     private Fragment mFragment;
@@ -61,6 +62,15 @@ public class FragmentTabListener<T extends Fragment> implements TabListener {
         } else {
             // If it exists, simply attach it in order to show it
             sft.attach(mFragment);
+        }
+        Fragment cur = null;
+        try {
+            cur = mActivity.getSupportFragmentManager().findFragmentByTag("WordOfDay");
+        } catch (Exception e) {
+            Log.e("onTabSelected",  "when click on " + mTag + e.toString());
+        }
+        if(cur != null) {
+            sft.remove(cur);
         }
         sft.commit();
     }
