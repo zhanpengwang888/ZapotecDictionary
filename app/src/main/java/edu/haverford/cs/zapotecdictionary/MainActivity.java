@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 
@@ -38,6 +39,7 @@ public class MainActivity  extends FragmentActivity {
         String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
         DownloadData downloadData = new DownloadData(getApplicationContext(), url);
+        downloadData.execute();
 
         final ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -113,7 +115,9 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             out = new FileOutputStream("update.zip");
 
             dataSize = in.read(buffer);
+            Log.e("----------------------- cur size" , Integer.toString(dataSize));
             while(dataSize > 0) {
+                Log.e("----------------------- cur size" , Integer.toString(dataSize));
                 out.write(buffer, 0, dataSize);
                 dataSize = in.read(buffer);
             }
