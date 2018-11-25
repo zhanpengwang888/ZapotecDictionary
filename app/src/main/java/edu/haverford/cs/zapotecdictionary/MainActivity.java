@@ -120,10 +120,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             out = new FileOutputStream(file, true);
 
             dataSize = in.read(buffer);
-            Log.e("------------------ filepath", file.getAbsolutePath());
-            Log.e("----------------------- cur size" , Integer.toString(dataSize));
             while(dataSize > 0) {
-                Log.e("----------------------- cur size" , Integer.toString(dataSize));
                 out.write(buffer, 0, dataSize);
                 dataSize = in.read(buffer);
             }
