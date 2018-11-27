@@ -53,7 +53,7 @@ public class ZapotecDictionaryDBHelper extends SQLiteOpenHelper {
     public ContentValues createContentValues(String oid, String lang, String ipa, String gloss, String pos, String usageExample, String dialect,
                                              String metadata, String authority, String audio, String image, String semantic_ids, String czi, String esGloss) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DICTIONARY_COLUMN_OID, oid);
+        contentValues.put(DICTIONARY_COLUMN_OID, Integer.parseInt(oid));
         contentValues.put(DICTIONARY_COLUMN_LANG, lang);
         contentValues.put(DICTIONARY_COLUMN_IPA, ipa);
         contentValues.put(DICTIONARY_COLUMN_GLOSSARY, gloss);
@@ -90,8 +90,18 @@ public class ZapotecDictionaryDBHelper extends SQLiteOpenHelper {
 
     public Cursor getData(int oid) {
         mDB = this.getReadableDatabase();
-        return mDB.rawQuery("SELECT * FROM "+DICTIONARY_TABLE_NAME+" WHERE id ="+oid+"", null);
+        return mDB.rawQuery("SELECT * FROM "+DICTIONARY_TABLE_NAME+" WHERE oid ="+oid+"", null);
     }
+
+    public String getEntry(int oid) {
+        Cursor cur = getData(oid);
+        cur.moveToFirst();
+        StringBuilder sb = new StringBuilder();
+        sb.append(cur.getString(cur.getColumnIndex(DICTIONARY_COLUMN_LANG)));
+        cur.close();
+        return sb.toString();
+    }
+
 
 }
 
