@@ -30,6 +30,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -89,9 +91,18 @@ public class MainActivity  extends FragmentActivity {
 class DownloadData extends AsyncTask<String, Void, Void> {
     public ZapotecDictionaryDBHelper db;
     private static HttpURLConnection con;
+
     private String urlStr;
     // unzipfile name
-    private String dictionaryfn = "/tlacochahuaya_content/tlacochahuaya_export.json";
+    private String dictionaryfp = "/tlacochahuaya_content/tlacochahuaya_export.json";
+
+    // response code
+    private final int NO_UPDATE = 204;
+    private final int ERROR1 = 403;
+    private final int ERROR2 = 404;
+    private final int SUCCESS = 200;
+
+
 
     public DownloadData(Context context, String url) {
         db = new ZapotecDictionaryDBHelper(context);
@@ -99,15 +110,130 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         con = null;
     }
 
+    public String getUrlParameters(String dict, String current, String export, String dl_type, String hash, String current_hash) {
+        StringBuilder sb = new StringBuilder("dict=");
+        if(dict != null) {
+            sb.append(dict);
+            sb.append("&");
+        }
+        if(current != null) {
+            sb.append("current=");
+            sb.append(current);
+            sb.append("&");
+        }
+        if(export != null) {
+            sb.append("export=");
+            sb.append(export);
+            sb.append("&");
+        }
+        if(dl_type != null) {
+            sb.append("dl_type=");
+            sb.append(dl_type);
+            sb.append("&");
+        }
+        if(hash != null) {
+            sb.append("hash=");
+            sb.append(hash);
+            sb.append("&");
+        }
+        if(current_hash != null) {
+            sb.append("current_hash=");
+            sb.append(current_hash);
+            sb.append("&");
+        }
+        return sb.toString();
+    }
+
+    /*
+         - `download` will call `updateData` immediately if dictionary file does not exists
+         - if file exists, then if will get hash and send post request with hash, which will download
+            dictionary file if there is any updates, do nothing if no updates
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void fetchData(String urlParameters) {
-        //String urlParameters = "dict=tlacochahuaya&export=TRUE&dl_type=1";
-        byte[] data = urlParameters.getBytes(Charset.defaultCharset());
+    public void download(String dict, String dl_type) {
+        String fp = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS).getPath() +  "/dataFolder" + dictionaryfp;
+        File f = new File(fp);
+        if(!f.exists()) {
+            updateData(dict, dl_type, "");
+            return;
+        }
+        InputStream in = null;
+        FileOutputStream out = null;
+
+        String urlGetHash = getUrlParameters(dict, "TRUE", null, dl_type, "TRUE", "");
+        byte[] data = urlGetHash.getBytes(Charset.defaultCharset());
+        byte[] buffer = new byte[1024];
+        int dataSize;
+        String last_hash = "";
+
+        // get last hash
+        try {
+            URL url = new URL(urlStr);
+            con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+
+            try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+                wr.write(data);
+            } catch (Exception e) {
+                Log.e("bg0", "Error writing post msg");
+                e.printStackTrace();
+            }
+
+            Log.e("hash code", "GET HASH ___________ " + con.getResponseCode()+ " ");
+
+            in = con.getInputStream();
+            dataSize = in.read(buffer);
+            StringBuilder sb = new StringBuilder();
+            while(dataSize > 0) {
+                sb.append(new String(buffer, "UTF-8"), 0, dataSize);
+                buffer = new byte[1024];
+                dataSize = in.read(buffer);
+            }
+            last_hash = sb.toString();
+            if(last_hash == null) {
+                Log.e("get hash", "Error getting last hash in updateData");
+            } else {
+                //test
+                Log.e("got hash", "+_+_+_+_+_+_+_+_+" + last_hash);
+                updateData(dict, dl_type, last_hash);
+            }
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(con != null) {
+                con.disconnect();
+            }
+            if(in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void updateData(String dict, String dl_type, String last_hash) {
+        InputStream in = null;
+        FileOutputStream out = null;
         byte[] buffer = new byte[1024];
         int dataSize = 0;
 
-        InputStream in = null;
-        FileOutputStream out = null;
+        String urlParameters = getUrlParameters(dict, null, "TRUE", dl_type, last_hash, null);
+        byte[] dldata = urlParameters.getBytes(Charset.defaultCharset());
 
         try {
             URL url = new URL(urlStr);
@@ -116,29 +242,40 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
             // provide parameters required for POST request
             try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
-                wr.write(data);
+                wr.write(dldata);
             } catch (Exception e) {
                 Log.e("bg0", "Error writing post msg");
                 e.printStackTrace();
             }
 
-            in = con.getInputStream();
-            File path = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(path, "update.zip");
-            out = new FileOutputStream(file, true);
-            dataSize = in.read(buffer);
-            while(dataSize > 0) {
-                out.write(buffer, 0, dataSize);
+            // check response code
+            int responseCode = con.getResponseCode();
+            //test
+            Log.e("res code", "++_+_+_+_+_+" + responseCode);
+            //test
+            if(responseCode == ERROR1 || responseCode == ERROR2) {
+                // TODO show error message to user
+            } else if (responseCode == SUCCESS) {
+                in = con.getInputStream();
+                File path = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS);
+                File file = new File(path, "update.zip");
+                out = new FileOutputStream(file, true);
                 dataSize = in.read(buffer);
+                while (dataSize > 0) {
+                    out.write(buffer, 0, dataSize);
+                    dataSize = in.read(buffer);
+                }
+                out.flush();
+                String fp = path.getPath() + "/dataFolder";
+                unzip_file(file.getPath(), fp);
+                //test
+                Log.e("output file ", "==========================" + path.getPath() + "/dataFolder");
+                //test
+                writeDB(fp + dictionaryfp);
+            } else if (responseCode == NO_UPDATE) {
+                Log.e("no update", "dictionary data up to date");
             }
-            out.flush();
-            String fp = path.getPath()+"/dataFolder";
-            unzip_file(file.getPath(), fp);
-            //test
-            Log.e("output file ", "==========================" + path.getPath()+"/dataFolder");
-            //test
-            writeDB(fp + dictionaryfn);
         } catch (Exception e) {
             Log.e("bg1", "Error making connection");
             e.printStackTrace();
@@ -198,7 +335,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         JsonObject[] objArr = gson.fromJson(sb.toString(), JsonObject[].class);
         //test
         if(objArr.length > 0) {
-            Log.e("test", "+++++++++++++++++++++" + objArr[0].oid);
+            Log.e("test", "write_DB+++++++++++++++++++++" + objArr[0].oid);
         }
         //test
         for(JsonObject j : objArr) {
@@ -206,14 +343,14 @@ class DownloadData extends AsyncTask<String, Void, Void> {
                     j.dialect, j.metaData, j.authority, j.audio, j.image, j.semantic_ids, j.czi, j.esGloss);
         }
         //test
-        Log.e("dbtest", "_+_+_+_+_+_+_+_+_+_+_+_+_+" + db.getEntry(Integer.parseInt(objArr[0].oid   )));
+        Log.e("dbtest", "writeDB _+_+_+_+_+_+_+_+_+_+_+_+_+" + db.getEntry(Integer.parseInt(objArr[0].oid   )));
         //test
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected Void doInBackground(String... strings){
-        fetchData("dict=tlacochahuaya&export=TRUE&dl_type=1");
+        download("tlacochahuaya","1");
         return null;
     }
 
