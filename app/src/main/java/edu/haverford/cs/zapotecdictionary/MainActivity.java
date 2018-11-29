@@ -1,8 +1,10 @@
 package edu.haverford.cs.zapotecdictionary;
 
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,10 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -36,7 +40,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 
-public class MainActivity  extends FragmentActivity {
+public class MainActivity  extends FragmentActivity implements ActivityCompat.OnRequestPermissionsResultCallback  {
 
     //private ViewPager viewPager;
 
@@ -47,10 +51,15 @@ public class MainActivity  extends FragmentActivity {
             onRestoreInstanceState(savedInstanceState);
         }
 
-        String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
+        if(Build.VERSION.SDK_INT >= 23) {
+            String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permission, R.integer.WRITE_GET_PERM);
+        } else {
+            String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
-        DownloadData downloadData = new DownloadData(getApplicationContext(), url);
-        downloadData.execute();
+            DownloadData downloadData = new DownloadData(getApplicationContext(), url);
+            downloadData.execute();
+        }
 
         final ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -84,6 +93,24 @@ public class MainActivity  extends FragmentActivity {
         transaction.add(android.R.id.content, wordDay, "WordOfDay");
         transaction.commit();
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case R.integer.WRITE_GET_PERM:
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    //Granted.
+                    String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
+
+                    DownloadData downloadData = new DownloadData(getApplicationContext(), url);
+                    downloadData.execute();
+                }
+                else{
+                    Toast.makeText(this, R.string.write_perm_error, Toast.LENGTH_LONG);
+                }
+                break;
+        }
     }
 
 }
@@ -255,6 +282,8 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             //test
             if(responseCode == ERROR1 || responseCode == ERROR2) {
                 // TODO show error message to user
+                //AlertDialog.Builder adb = new AlertDialog.Builder(context);
+
             } else if (responseCode == SUCCESS) {
                 in = con.getInputStream();
                 File path = Environment.getExternalStoragePublicDirectory(

@@ -3,10 +3,31 @@
     package="edu.haverford.cs.zapotecdictionary">
 
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="22"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="22"/>
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        android:maxSdkVersion="22"/>
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        android:maxSdkVersion="22"/>
+
+    <uses-permission-sdk-23
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:minSdkVersion="23"/>
+    <uses-permission-sdk-23
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:minSdkVersion="23"/>
+    <uses-permission-sdk-23
+        android:name="android.permission.INTERNET"
+        android:minSdkVersion="23"/>
+    <uses-permission-sdk-23
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        android:minSdkVersion="23"/>
 
     <application
         android:allowBackup="true"

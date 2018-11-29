@@ -13,4 +13,5 @@
     <string name="update_min_content_audio">Content and Minimized Audio</string>
     <string name="update_min_content_audio_pic">Content, Minimized Audio and Images</string>
     <string name="update_full">Content, Full Audio and Images</string>
+    <string name="write_perm_error">Cannot access local storage</string>
 </resources>
