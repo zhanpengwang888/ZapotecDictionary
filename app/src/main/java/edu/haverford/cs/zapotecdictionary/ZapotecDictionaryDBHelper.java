@@ -93,15 +93,14 @@ public class ZapotecDictionaryDBHelper extends SQLiteOpenHelper {
         return mDB.rawQuery("SELECT * FROM "+DICTIONARY_TABLE_NAME+" WHERE oid ="+oid+"", null);
     }
 
-    public String getEntry(int oid) {
+    public String getInformationFromOID(int oid, String queryRequest) {
         Cursor cur = getData(oid);
         cur.moveToFirst();
         StringBuilder sb = new StringBuilder();
-        sb.append(cur.getString(cur.getColumnIndex(DICTIONARY_COLUMN_LANG)));
+        sb.append(cur.getString(cur.getColumnIndex(queryRequest)));
         cur.close();
         return sb.toString();
     }
-
 
 }
 
