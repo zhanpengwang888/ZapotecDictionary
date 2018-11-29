@@ -52,7 +52,10 @@ public class MainActivity  extends FragmentActivity implements ActivityCompat.On
         }
 
         if(Build.VERSION.SDK_INT >= 23) {
-            String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.INTERNET,
+                                    Manifest.permission.ACCESS_NETWORK_STATE};
             requestPermissions(permission, R.integer.WRITE_GET_PERM);
         } else {
             String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
@@ -95,9 +98,14 @@ public class MainActivity  extends FragmentActivity implements ActivityCompat.On
 
     }
 
+
+    /*
+        Get storage write and read requests for sdk version 23 and higher
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
+            //TODO: add more cases for checking other permissions
             case R.integer.WRITE_GET_PERM:
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     //Granted.
