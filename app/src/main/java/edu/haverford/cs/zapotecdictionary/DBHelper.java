@@ -6,29 +6,29 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class ZapotecDictionaryDBHelper extends SQLiteOpenHelper {
-    private static final String TAG = "ZapotecDictionaryDBHelper";
-    private static final String DATABASE_NAME = "zapotecDictionaryDB.db";
-    private static String DATABASE_PATH = "";
-    private static final String DICTIONARY_TABLE_NAME = "dictionary";
-    private static final String DICTIONARY_COLUMN_OID = "oid";
-    private static final String DICTIONARY_COLUMN_LANG = "lang";
-    private static final String DICTIONARY_COLUMN_IPA = "ipa";
-    private static final String DICTIONARY_COLUMN_GLOSSARY = "gloss";
-    private static final String DICTIONARY_COLUMN_POS = "pos";
-    private static final String DICTIONARY_COLUMN_USAGE_EXAMPLE = "usage_example";
-    private static final String DICTIONARY_COLUMN_DIALECT = "dialect";
-    private static final String DICTIONARY_COLUMN_METADATA = "metadata";
-    private static final String DICTIONARY_COLUMN_AUTHORITY = "authority";
-    private static final String DICTIONARY_COLUMN_AUDIO = "audio";
-    private static final String DICTIONARY_COLUMN_IMAGE = "image";
-    private static final String DICTIONARY_COLUMN_SEMANTIC_IDS = "semantic_ids";
-    private static final String DICTIONARY_COLUMN_CZI = "czi";
-    private static final String DICTIONARY_COLUMN_ES_GLOSS = "es_gloss";
+public class DBHelper extends SQLiteOpenHelper {
+    protected static final String TAG = "DBHelper";
+    protected static final String DATABASE_NAME = "zapotecDictionaryDB.db";
+    protected static String DATABASE_PATH = "";
+    protected static final String DICTIONARY_TABLE_NAME = "dictionary";
+    protected static final String DICTIONARY_COLUMN_OID = "oid";
+    protected static final String DICTIONARY_COLUMN_LANG = "lang";
+    protected static final String DICTIONARY_COLUMN_IPA = "ipa";
+    protected static final String DICTIONARY_COLUMN_GLOSSARY = "gloss";
+    protected static final String DICTIONARY_COLUMN_POS = "pos";
+    protected static final String DICTIONARY_COLUMN_USAGE_EXAMPLE = "usage_example";
+    protected static final String DICTIONARY_COLUMN_DIALECT = "dialect";
+    protected static final String DICTIONARY_COLUMN_METADATA = "metadata";
+    protected static final String DICTIONARY_COLUMN_AUTHORITY = "authority";
+    protected static final String DICTIONARY_COLUMN_AUDIO = "audio";
+    protected static final String DICTIONARY_COLUMN_IMAGE = "image";
+    protected static final String DICTIONARY_COLUMN_SEMANTIC_IDS = "semantic_ids";
+    protected static final String DICTIONARY_COLUMN_CZI = "czi";
+    protected static final String DICTIONARY_COLUMN_ES_GLOSS = "es_gloss";
     private final Context mContext;
     private SQLiteDatabase mDB;
 
-    public ZapotecDictionaryDBHelper(Context context) {
+    public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
         DATABASE_PATH = context.getApplicationInfo().dataDir + "/databases/";
         this.mContext = context;

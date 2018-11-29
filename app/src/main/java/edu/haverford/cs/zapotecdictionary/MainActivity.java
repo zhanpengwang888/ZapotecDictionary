@@ -132,7 +132,7 @@ public class MainActivity  extends FragmentActivity
 }
 
 class DownloadData extends AsyncTask<String, Void, Void> {
-    public ZapotecDictionaryDBHelper db;
+    public DBHelper db;
     private static HttpURLConnection con;
 
     private String urlStr;
@@ -148,7 +148,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
 
     public DownloadData(Context context, String url) {
-        db = new ZapotecDictionaryDBHelper(context);
+        db = new DBHelper(context);
         this.urlStr = url;
         con = null;
     }
@@ -388,7 +388,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
                     j.dialect, j.metaData, j.authority, j.audio, j.image, j.semantic_ids, j.czi, j.esGloss);
         }
         //test
-        Log.e("dbtest", "writeDB _+_+_+_+_+_+_+_+_+_+_+_+_+" + db.getEntry(Integer.parseInt(objArr[0].oid   )));
+        Log.e("dbtest", "writeDB _+_+_+_+_+_+_+_+_+_+_+_+_+" + db.getInformationFromOID(Integer.parseInt(objArr[0].oid), "lang"));
         //test
     }
 

@@ -2,6 +2,7 @@ package edu.haverford.cs.zapotecdictionary;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,7 @@ import android.widget.ImageButton;
 
 public class WordViewFragment extends Fragment {
 
-    protected ZapotecDictionaryDBHelper db;
+    protected DBHelper db;
     protected int oid;
 
     public WordViewFragment() {
@@ -36,9 +37,12 @@ public class WordViewFragment extends Fragment {
                 MediaPlayer mp = new MediaPlayer();
                 try {
                     //TODO: get message from db (zhanpeng)
-//                    mp.setDataSource(path + File.separator + fileName);
-//                    mp.prepare();
-//                    mp.start();
+                    String audiofn = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUDIO);
+                    String audiofp = Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DOWNLOADS).getPath() + "/aud/" + audiofn;
+                    mp.setDataSource(audiofp);
+                    mp.prepare();
+                    mp.start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
