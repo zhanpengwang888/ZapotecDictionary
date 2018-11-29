@@ -40,9 +40,12 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 
-public class MainActivity  extends FragmentActivity implements ActivityCompat.OnRequestPermissionsResultCallback  {
+public class MainActivity  extends FragmentActivity
+                        implements ActivityCompat.OnRequestPermissionsResultCallback, SearchFragment.SendText{
 
     //private ViewPager viewPager;
+    protected ActionBar actionBar;
+    protected WordViewFragment wf;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +67,7 @@ public class MainActivity  extends FragmentActivity implements ActivityCompat.On
             downloadData.execute();
         }
 
-        final ActionBar actionBar = getActionBar();
+        actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#91aaa7")));
@@ -90,6 +93,8 @@ public class MainActivity  extends FragmentActivity implements ActivityCompat.On
         tab3.setTabListener(new FragmentTabListener<SettingsFragment>(this, "Settings", SettingsFragment.class));
         actionBar.addTab(tab3);
 
+        wf = new WordViewFragment();
+
         FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
         Fragment wordDay = new WordOfDayFragment();
@@ -98,6 +103,9 @@ public class MainActivity  extends FragmentActivity implements ActivityCompat.On
 
     }
 
+    @Override public void sendText(int msg) {
+        wf.set_curId(msg);
+    }
 
     /*
         Get storage write and read requests for sdk version 23 and higher
@@ -107,7 +115,7 @@ public class MainActivity  extends FragmentActivity implements ActivityCompat.On
         switch (requestCode) {
             //TODO: add more cases for checking other permissions
             case R.integer.WRITE_GET_PERM:
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if(grantResults[R.integer.WRITE_GET_PERM] == PackageManager.PERMISSION_GRANTED){
                     //Granted.
                     String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
@@ -387,7 +395,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected Void doInBackground(String... strings){
-        download("tlacochahuaya","1");
+        download("tlacochahuaya","0");
         return null;
     }
 

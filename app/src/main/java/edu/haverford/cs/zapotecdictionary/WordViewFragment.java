@@ -1,0 +1,53 @@
+package edu.haverford.cs.zapotecdictionary;
+
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+
+public class WordViewFragment extends Fragment {
+
+    protected ZapotecDictionaryDBHelper db;
+    protected int oid;
+
+    public WordViewFragment() {
+        super();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
+        return inflater.inflate(R.layout.word_view, container, false);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState != null) {
+            onViewStateRestored(savedInstanceState);
+        }
+
+        ImageButton imb = getActivity().findViewById(R.id.searchWords_voiceE);
+        imb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MediaPlayer mp = new MediaPlayer();
+                try {
+                    //TODO: get message from db (zhanpeng)
+//                    mp.setDataSource(path + File.separator + fileName);
+//                    mp.prepare();
+//                    mp.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    public void set_curId(int newId) {
+        oid = newId;
+    }
+}
