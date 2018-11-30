@@ -34,6 +34,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.shamanland:fonticon:0.1.9'
-    implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '1.2.4'
     implementation 'com.google.code.gson:gson:2.8.5'
 }

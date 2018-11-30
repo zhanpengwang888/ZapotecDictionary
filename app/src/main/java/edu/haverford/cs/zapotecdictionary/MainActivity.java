@@ -22,9 +22,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -38,6 +37,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 
 public class MainActivity  extends FragmentActivity
@@ -115,7 +117,7 @@ public class MainActivity  extends FragmentActivity
         switch (requestCode) {
             //TODO: add more cases for checking other permissions
             case R.integer.WRITE_GET_PERM:
-                if(grantResults[R.integer.WRITE_GET_PERM] == PackageManager.PERMISSION_GRANTED){
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     //Granted.
                     String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
@@ -346,12 +348,54 @@ class DownloadData extends AsyncTask<String, Void, Void> {
     }
 
     public void unzip_file(String zip_source, String destination) {
-        try {
-            ZipFile zipFile = new ZipFile(zip_source);
-            zipFile.extractAll(destination);
-        } catch (ZipException e) {
+        try
+        {
+            File file = new File(zip_source);
+
+            ZipFile zip = new ZipFile(file);
+
+            File des = new File(destination);
+            des.mkdir();
+            Enumeration zipFileEntries = zip.entries();
+
+            while (zipFileEntries.hasMoreElements())
+            {
+                ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+                String currentEntry = entry.getName();
+                File destFile = new File(destination, currentEntry);
+                File destinationParent = destFile.getParentFile();
+                destinationParent.mkdirs();
+
+                if (!entry.isDirectory())
+                {
+                    BufferedInputStream is = new BufferedInputStream(zip
+                            .getInputStream(entry));
+                    int numBytes = 0;
+                    byte data[] = new byte[2048];
+                    FileOutputStream fos = new FileOutputStream(destFile);
+                    BufferedOutputStream dest = new BufferedOutputStream(fos,
+                            2048);
+                    while ((numBytes = is.read(data, 0, 2048)) != -1) {
+                        dest.write(data, 0, numBytes);
+                    }
+                    dest.flush();
+                    dest.close();
+                    is.close();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e ("ERROR: ", "Error unziping files");
             e.printStackTrace();
         }
+
+//        try {
+//            ZipFile zipFile = new ZipFile(zip_source);
+//            zipFile.extractAll(destination);
+//        } catch (ZipException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void writeDB(String fp) {
