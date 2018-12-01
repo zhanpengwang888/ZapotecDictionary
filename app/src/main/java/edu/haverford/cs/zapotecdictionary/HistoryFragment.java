@@ -24,6 +24,14 @@ public class HistoryFragment extends Fragment {
         this.db = db;
     }
 
+    protected ArrayList<String> getHistoryList() {
+        return new ArrayList<String>(historyOfWords.getHistoryList());
+    }
+
+    protected void restoreHistoryList(ArrayList<String> historyList) {
+        historyOfWords.addAllToList(historyList);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
         View result = inflater.inflate(R.layout.history, container, false);
@@ -37,19 +45,20 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if(savedInstanceState != null) {
-//            onViewStateRestored(savedInstanceState);
-//        }
+        if(savedInstanceState != null) {
+            onViewStateRestored(savedInstanceState);
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(savedInstanceState != null) {
-            ArrayList<String> store = savedInstanceState.getStringArrayList("history");
+            ArrayList<String> store = savedInstanceState.getStringArrayList("historyList");
             historyOfWords.addAll(store);
         }
     }
+
 
     public void addNewWord(int newId) {
         String newWord = db.getInformationFromOID(newId, DBHelper.DICTIONARY_COLUMN_LANG);
@@ -58,11 +67,12 @@ public class HistoryFragment extends Fragment {
 
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         ArrayList<String> store = new ArrayList<>(historyOfWords.getHistoryList());
-        savedInstanceState.putStringArrayList("history", store);
+        outState.putStringArrayList("history", store);
     }
+
 
 
 }

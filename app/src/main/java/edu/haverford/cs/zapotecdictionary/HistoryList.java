@@ -4,6 +4,7 @@ import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class HistoryList extends AbstractList<String> {
@@ -17,6 +18,10 @@ public class HistoryList extends AbstractList<String> {
 
     public LinkedList<String> getHistoryList() {
         return historyOfWords;
+    }
+
+    public void addAllToList(ArrayList<String> words) {
+        historyOfWords.addAll(words);
     }
 
     protected void notifyChanged() {

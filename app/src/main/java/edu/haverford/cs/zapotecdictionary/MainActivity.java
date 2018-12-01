@@ -3,6 +3,8 @@ package edu.haverford.cs.zapotecdictionary;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -36,7 +38,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -49,15 +53,21 @@ public class MainActivity  extends FragmentActivity
     protected WordViewFragment wf;
     protected HistoryFragment hf;
     protected DBHelper db;
+    private Bundle savedState;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedState == null) {
             onRestoreInstanceState(savedInstanceState);
-            //hf = (HistoryFragment)getSupportFragmentManager().getFragment(savedInstanceState, "historyFragment");
-            //hf = savedInstanceState.getSerializable("historyFragment");
+        } else if(savedState != null) {
+            hf.restoreHistoryList(savedState.getStringArrayList("historyList"));
+            savedState = null;
         }
+        SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
+        HashSet<String> hs = new HashSet<>();
+        sp.getStringSet("historyList", hs);
+        hf.restoreHistoryList(new ArrayList<String>(hs));
 
         if(Build.VERSION.SDK_INT >= 23) {
             String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -112,6 +122,7 @@ public class MainActivity  extends FragmentActivity
 
     }
 
+
     @Override public void sendText(int msg) {
         wf.set_curId(msg);
         HistoryFragment hf = new HistoryFragment();
@@ -141,10 +152,19 @@ public class MainActivity  extends FragmentActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //getSupportFragmentManager().putFragment(outState, "historyFragment", hf);
-        //outState.putSerializable("historyFragment", hf);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor se = sp.edit();
+        se.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
+        se.commit();
+//        savedState = new Bundle();
+//        savedState.putStringArrayList("historyList", hf.getHistoryList());
     }
 
 

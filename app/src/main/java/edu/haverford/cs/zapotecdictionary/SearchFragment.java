@@ -27,6 +27,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setRetainInstance(true);
         if(savedInstanceState != null) {
             onViewStateRestored(savedInstanceState);
         }
