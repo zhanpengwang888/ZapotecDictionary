@@ -8,11 +8,15 @@ import java.util.LinkedList;
 
 public class HistoryList extends AbstractList<String> {
     private final DataSetObservable dataSetObservable;
-    private final LinkedList<String> historyOfWords;
+    protected final LinkedList<String> historyOfWords;
 
     public HistoryList() {
         this.dataSetObservable = new DataSetObservable();
         this.historyOfWords = new LinkedList<>();
+    }
+
+    public LinkedList<String> getHistoryList() {
+        return historyOfWords;
     }
 
     protected void notifyChanged() {

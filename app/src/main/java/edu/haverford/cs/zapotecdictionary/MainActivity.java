@@ -3,7 +3,6 @@ package edu.haverford.cs.zapotecdictionary;
 
 import android.Manifest;
 import android.app.ActionBar;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -48,12 +47,16 @@ public class MainActivity  extends FragmentActivity
     //private ViewPager viewPager;
     protected ActionBar actionBar;
     protected WordViewFragment wf;
+    protected HistoryFragment hf;
+    protected DBHelper db;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
+            //hf = (HistoryFragment)getSupportFragmentManager().getFragment(savedInstanceState, "historyFragment");
+            //hf = savedInstanceState.getSerializable("historyFragment");
         }
 
         if(Build.VERSION.SDK_INT >= 23) {
@@ -65,7 +68,8 @@ public class MainActivity  extends FragmentActivity
         } else {
             String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
-            DownloadData downloadData = new DownloadData(getApplicationContext(), url);
+            db = new DBHelper(getApplicationContext());
+            DownloadData downloadData = new DownloadData(db, url);
             downloadData.execute();
         }
 
@@ -96,6 +100,9 @@ public class MainActivity  extends FragmentActivity
         actionBar.addTab(tab3);
 
         wf = new WordViewFragment();
+        wf.setDB(db);
+        hf = new HistoryFragment();
+        hf.setDB(db);
 
         FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
@@ -107,6 +114,8 @@ public class MainActivity  extends FragmentActivity
 
     @Override public void sendText(int msg) {
         wf.set_curId(msg);
+        HistoryFragment hf = new HistoryFragment();
+        hf.addNewWord(msg);
     }
 
     /*
@@ -121,7 +130,7 @@ public class MainActivity  extends FragmentActivity
                     //Granted.
                     String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
-                    DownloadData downloadData = new DownloadData(getApplicationContext(), url);
+                    DownloadData downloadData = new DownloadData(db, url);
                     downloadData.execute();
                 }
                 else{
@@ -130,6 +139,14 @@ public class MainActivity  extends FragmentActivity
                 break;
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //getSupportFragmentManager().putFragment(outState, "historyFragment", hf);
+        //outState.putSerializable("historyFragment", hf);
+    }
+
 
 }
 
@@ -149,8 +166,8 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
 
 
-    public DownloadData(Context context, String url) {
-        db = new DBHelper(context);
+    public DownloadData(DBHelper db, String url) {
+        this.db = db;
         this.urlStr = url;
         con = null;
     }

@@ -12,10 +12,14 @@ import android.widget.ImageButton;
 public class WordViewFragment extends Fragment {
 
     protected DBHelper db;
-    protected int oid;
+    protected static int oid;
 
     public WordViewFragment() {
         super();
+    }
+
+    public void setDB(DBHelper db) {
+        this.db = db;
     }
 
     @Override
