@@ -1,5 +1,7 @@
 package edu.haverford.cs.zapotecdictionary;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class HistoryFragment extends Fragment {
 
@@ -37,6 +40,7 @@ public class HistoryFragment extends Fragment {
         View result = inflater.inflate(R.layout.history, container, false);
         ListView listView = (ListView) result.findViewById(R.id.history_list);
         historyOfWords.add("miehha");
+        historyOfWords.add("miewawa");
         listAdapter = new HistoryListAdapter(getActivity(),historyOfWords);
         listView.setAdapter(listAdapter);
         return result;
@@ -52,11 +56,16 @@ public class HistoryFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
+        if(sp != null) {
+            HashSet<String> hs = (HashSet<String>) sp.getStringSet("historyList", new HashSet<String>());
+            restoreHistoryList(new ArrayList<String>(hs));
+        }
         if(savedInstanceState != null) {
             ArrayList<String> store = savedInstanceState.getStringArrayList("historyList");
             historyOfWords.addAll(store);
         }
+        super.onActivityCreated(savedInstanceState);
     }
 
 

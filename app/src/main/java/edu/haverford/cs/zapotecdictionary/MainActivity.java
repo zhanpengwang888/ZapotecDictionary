@@ -38,7 +38,6 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
@@ -64,10 +63,6 @@ public class MainActivity  extends FragmentActivity
             hf.restoreHistoryList(savedState.getStringArrayList("historyList"));
             savedState = null;
         }
-        SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
-        HashSet<String> hs = new HashSet<>();
-        sp.getStringSet("historyList", hs);
-        hf.restoreHistoryList(new ArrayList<String>(hs));
 
         if(Build.VERSION.SDK_INT >= 23) {
             String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -114,6 +109,14 @@ public class MainActivity  extends FragmentActivity
         hf = new HistoryFragment();
         hf.setDB(db);
 
+
+//        SharedPreferences sp = getSharedPreferences("info", Context.MODE_PRIVATE);
+//        if(sp != null) {
+//            HashSet<String> hs = (HashSet<String>) sp.getStringSet("historyList", new HashSet<String>());
+//            hf.restoreHistoryList(new ArrayList<String>(hs));
+//        }
+
+
         FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
         Fragment wordDay = new WordOfDayFragment();
@@ -157,12 +160,21 @@ public class MainActivity  extends FragmentActivity
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        SharedPreferences sp = getSharedPreferences("info", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
+        editor.commit();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor se = sp.edit();
-        se.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
-        se.commit();
+//        SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
+//        SharedPreferences.Editor se = sp.edit();
+//        se.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
+//        se.commit();
 //        savedState = new Bundle();
 //        savedState.putStringArrayList("historyList", hf.getHistoryList());
     }
