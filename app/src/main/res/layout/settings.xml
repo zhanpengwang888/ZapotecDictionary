@@ -34,15 +34,17 @@
                 android:typeface="monospace" />
 
             <Switch
-            android:id="@+id/update_content_only"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/update_content_only"
-            tools:layout_editor_absoluteX="109dp"
-            tools:layout_editor_absoluteY="82dp" />
+                android:id="@+id/update_content_only"
+                android:theme="@style/SwitchTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/update_content_only"
+                tools:layout_editor_absoluteX="109dp"
+                tools:layout_editor_absoluteY="82dp" />
 
             <Switch
                 android:id="@+id/update_content_min_audio"
+                android:theme="@style/SwitchTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/update_min_content_audio"
@@ -51,6 +53,7 @@
 
             <Switch
                 android:id="@+id/update_content_min_audio_pic"
+                android:theme="@style/SwitchTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/update_min_content_audio_pic"
@@ -59,6 +62,7 @@
 
             <Switch
                 android:id="@+id/update_full"
+                android:theme="@style/SwitchTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/update_full"

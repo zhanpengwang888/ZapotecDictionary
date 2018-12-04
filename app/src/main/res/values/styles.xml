@@ -5,4 +5,8 @@
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
     </style>
 
+    <style name="SwitchTheme" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">#7eb2a0</item>
+    </style>
+
 </resources>

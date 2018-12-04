@@ -51,12 +51,21 @@ public class MainActivity  extends FragmentActivity
     protected ActionBar actionBar;
     protected WordViewFragment wf;
     protected HistoryFragment hf;
+    protected SettingsFragment sf;
     protected DBHelper db;
     private Bundle savedState;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        wf = new WordViewFragment();
+        wf.setDB(db);
+        hf = new HistoryFragment();
+        hf.setDB(db);
+        new SearchFragment().setDB(db);
+        sf = new SettingsFragment();
+
         if (savedInstanceState != null && savedState == null) {
             onRestoreInstanceState(savedInstanceState);
         } else if(savedState != null) {
@@ -74,7 +83,7 @@ public class MainActivity  extends FragmentActivity
             String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
             db = new DBHelper(getApplicationContext());
-            DownloadData downloadData = new DownloadData(db, url);
+            DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
             downloadData.execute();
         }
 
@@ -104,20 +113,6 @@ public class MainActivity  extends FragmentActivity
         tab3.setTabListener(new FragmentTabListener<SettingsFragment>(this, "Settings", SettingsFragment.class));
         actionBar.addTab(tab3);
 
-        wf = new WordViewFragment();
-        wf.setDB(db);
-        hf = new HistoryFragment();
-        hf.setDB(db);
-        new SearchFragment().setDB(db);
-
-
-//        SharedPreferences sp = getSharedPreferences("info", Context.MODE_PRIVATE);
-//        if(sp != null) {
-//            HashSet<String> hs = (HashSet<String>) sp.getStringSet("historyList", new HashSet<String>());
-//            hf.restoreHistoryList(new ArrayList<String>(hs));
-//        }
-
-
         FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
         Fragment wordDay = new WordOfDayFragment();
@@ -145,7 +140,7 @@ public class MainActivity  extends FragmentActivity
                     //Granted.
                     String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
-                    DownloadData downloadData = new DownloadData(db, url);
+                    DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
                     downloadData.execute();
                 }
                 else{
@@ -165,6 +160,9 @@ public class MainActivity  extends FragmentActivity
         super.onStop();
         SharedPreferences sp = getSharedPreferences("info", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
+        for(int i = 0; i < sf.switchArr.length; i++) {
+            editor.putBoolean(Integer.toString(i), sf.switchArr[i].isChecked());
+        }
         editor.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
         editor.commit();
     }
@@ -186,10 +184,11 @@ public class MainActivity  extends FragmentActivity
 class DownloadData extends AsyncTask<String, Void, Void> {
     public DBHelper db;
     private static HttpURLConnection con;
+    private SharedPreferences sp;
 
     private String urlStr;
     // unzipfile name
-    private String dictionaryfp = "/tlacochahuaya_content/tlacochahuaya_export.json";
+    private final String dictionaryfp = "/tlacochahuaya_content/tlacochahuaya_export.json";
 
     // response code
     private final int NO_UPDATE = 204;
@@ -199,7 +198,8 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
 
 
-    public DownloadData(DBHelper db, String url) {
+    public DownloadData(DBHelper db, SharedPreferences sp, String url) {
+        this.sp = sp;
         this.db = db;
         this.urlStr = url;
         con = null;
@@ -489,7 +489,22 @@ class DownloadData extends AsyncTask<String, Void, Void> {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected Void doInBackground(String... strings){
-        download("tlacochahuaya","0");
+        Integer target = null;
+        if(sp == null) {
+            download("tlacochahuaya","1");
+        } else {
+            for(int i = 0; i < 4; i++) {
+                if(sp.getBoolean(Integer.toString(i), false)) {
+                    target = i;
+                    break;
+                }
+            }
+        }
+        if(target == null) {
+            download("tlacochahuaya","1");
+        } else {
+            download("tlacochahuaya",target.toString());
+        }
         return null;
     }
 

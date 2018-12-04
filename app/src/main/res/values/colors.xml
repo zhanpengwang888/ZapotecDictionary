@@ -5,5 +5,7 @@
     <color name="colorAccent">#D81B60</color>
     <color name="tab_icon_color">#DEE3FF</color>
     <color name="actionbar_icon">#855a72</color>
+    <color name="switch_off">#d3d3d3</color>
+    <color name="switch_on">#98f5ff</color>
 </resources>
 
