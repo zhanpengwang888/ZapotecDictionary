@@ -60,11 +60,9 @@ public class MainActivity  extends FragmentActivity
         setContentView(R.layout.activity_main);
 
         wf = new WordViewFragment();
-        wf.setDB(db);
         hf = new HistoryFragment();
-        hf.setDB(db);
-        new SearchFragment().setDB(db);
         sf = new SettingsFragment();
+        db = new DBHelper(getApplicationContext());
 
         if (savedInstanceState != null && savedState == null) {
             onRestoreInstanceState(savedInstanceState);
@@ -81,10 +79,11 @@ public class MainActivity  extends FragmentActivity
             requestPermissions(permission, R.integer.WRITE_GET_PERM);
         } else {
             String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
-
-            db = new DBHelper(getApplicationContext());
             DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
             downloadData.execute();
+            wf.setDB(db);
+            hf.setDB(db);
+            new SearchFragment().setDB(db);
         }
 
         actionBar = getActionBar();
@@ -160,8 +159,14 @@ public class MainActivity  extends FragmentActivity
         super.onStop();
         SharedPreferences sp = getSharedPreferences("info", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        for(int i = 0; i < sf.switchArr.length; i++) {
-            editor.putBoolean(Integer.toString(i), sf.switchArr[i].isChecked());
+        if(sf.switchArr[0] == null) {
+            for(int i = 0; i < sf.switchArr.length; i++) {
+                editor.putBoolean(Integer.toString(i), false);
+            }
+        } else {
+            for(int i = 0; i < sf.switchArr.length; i++) {
+                editor.putBoolean(Integer.toString(i), sf.switchArr[i].isChecked());
+            }
         }
         editor.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
         editor.commit();
@@ -196,6 +201,8 @@ class DownloadData extends AsyncTask<String, Void, Void> {
     private final int ERROR2 = 404;
     private final int SUCCESS = 200;
 
+    private String last_dl_type;
+
 
 
     public DownloadData(DBHelper db, SharedPreferences sp, String url) {
@@ -203,6 +210,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         this.db = db;
         this.urlStr = url;
         con = null;
+        last_dl_type = null;
     }
 
     public String getUrlParameters(String dict, String current, String export, String dl_type, String hash, String current_hash) {
@@ -262,6 +270,27 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         int dataSize;
         String last_hash = "";
 
+        if(last_dl_type == null) {
+            last_dl_type = dl_type;
+            try {
+                updateData(dict, dl_type, last_hash);
+                last_dl_type = dl_type;
+            } catch(Exception e) {
+                Log.e("bg update", "Always download something wrong");
+                e.printStackTrace();
+            }
+            return;
+        } else if(last_dl_type != dl_type) {
+            try {
+                updateData(dict, dl_type, last_hash);
+                last_dl_type = dl_type;
+            } catch(Exception e) {
+                Log.e("bg update", "Always download something wrong");
+                e.printStackTrace();
+            }
+            return;
+        }
+
         // get last hash
         try {
             URL url = new URL(urlStr);
@@ -290,7 +319,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
                 Log.e("get hash", "Error getting last hash in updateData");
             } else {
                 //test
-                Log.e("got hash", "+_+_+_+_+_+_+_+_+" + last_hash);
+                Log.e("got hash", "+_+_+_+_+_+_+_+_+" + last_hash + " dl_type " + dl_type);
                 updateData(dict, dl_type, last_hash);
             }
         } catch (ProtocolException e) {
@@ -496,6 +525,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             for(int i = 0; i < 4; i++) {
                 if(sp.getBoolean(Integer.toString(i), false)) {
                     target = i;
+                    Log.e("target", "===========" + target);
                     break;
                 }
             }
