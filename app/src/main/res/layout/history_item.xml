@@ -6,18 +6,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="6dp"
-        >
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/zapotec_word"
             style="@android:style/TextAppearance.Holo.SearchResult.Title"
-            android:textSize="20sp"
-            android:text="Zapotec Word"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|top"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="Zapotec Word"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/word_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="1 day ago"
+            android:textSize="20sp"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,9 @@ public class HistoryFragment extends Fragment {
 
     public void addNewWord(int newId) {
         String newWord = db.getInformationFromOID(newId, DBHelper.DICTIONARY_COLUMN_LANG);
+        Long curTime = System.currentTimeMillis();
+        Log.e("curtime", "-------------" + curTime);
+        newWord += ("/" + curTime.toString());
         historyOfWords.add(newWord);
     }
 

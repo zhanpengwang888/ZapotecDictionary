@@ -43,6 +43,7 @@ public class HistoryList extends AbstractList<String> {
         return isAddSuccessful;
     }
 
+
     @Override
     public int indexOf(Object word){
         return historyOfWords.indexOf(word);

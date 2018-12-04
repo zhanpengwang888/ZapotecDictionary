@@ -60,7 +60,10 @@ public class HistoryListAdapter extends BaseAdapter implements ListAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.history_item, parent, false);
         }
         TextView theWord = (TextView) convertView.findViewById(R.id.zapotec_word);
-        theWord.setText(word);
+        TextView date = (TextView) convertView.findViewById(R.id.word_date);
+        String[] wordInfo = word.split("/");
+        theWord.setText(wordInfo[0]);
+        //date.setText(wordInfo[1]);
         return convertView;
     }
 
