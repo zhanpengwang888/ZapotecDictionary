@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/word_page"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#E5E6E0"
-    android:orientation="vertical">
-
-    <SearchView
-        android:id="@+id/searchWords_searchView"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <SearchView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:actionViewClass="android.widget.SearchView"
         android:queryHint="Look Up" />
+
+    <ListView
+        android:id="@+id/search_word_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
