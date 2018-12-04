@@ -4,14 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class HistoryFragment extends Fragment {
 
@@ -72,9 +74,9 @@ public class HistoryFragment extends Fragment {
 
     public void addNewWord(int newId) {
         String newWord = db.getInformationFromOID(newId, DBHelper.DICTIONARY_COLUMN_LANG);
-        Long curTime = System.currentTimeMillis();
-        Log.e("curtime", "-------------" + curTime);
-        newWord += ("/" + curTime.toString());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        newWord += ("/" + dateFormat.format(date));
         historyOfWords.add(newWord);
     }
 

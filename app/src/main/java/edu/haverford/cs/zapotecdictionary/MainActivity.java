@@ -108,6 +108,7 @@ public class MainActivity  extends FragmentActivity
         wf.setDB(db);
         hf = new HistoryFragment();
         hf.setDB(db);
+        new SearchFragment().setDB(db);
 
 
 //        SharedPreferences sp = getSharedPreferences("info", Context.MODE_PRIVATE);
