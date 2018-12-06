@@ -63,14 +63,25 @@ public class FragmentTabListener<T extends Fragment> implements TabListener {
             // If it exists, simply attach it in order to show it
             sft.attach(mFragment);
         }
-        Fragment cur = null;
-        try {
-            cur = mActivity.getSupportFragmentManager().findFragmentByTag("WordOfDay");
-        } catch (Exception e) {
-            Log.e("onTabSelected",  "when click on " + mTag + e.toString());
-        }
-        if(cur != null) {
-            sft.remove(cur);
+        if(tab.getPosition() != 0) {
+            Fragment cur = null;
+            try {
+                cur = mActivity.getSupportFragmentManager().findFragmentByTag("WordOfDay");
+            } catch (Exception e) {
+                Log.e("onTabSelected",  "when click on " + mTag + e.toString());
+            }
+            if(cur != null) {
+                sft.remove(cur);
+            }
+        } else {
+            String oldQuery = ((SearchFragment)mFragment).getOldQuery();
+            if(oldQuery == null || oldQuery.length() == 0){
+                Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag("WordOfDay");
+                if(f == null) {
+                    sft.add(android.R.id.content, new WordOfDayFragment(), "WordOfDay");
+                    mActivity.getSupportFragmentManager().popBackStackImmediate("WordOfDay", 0);
+                } //else if (mActivity.getSupportFragmentManager().get)
+            }
         }
         sft.commit();
     }

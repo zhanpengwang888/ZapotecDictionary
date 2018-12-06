@@ -15,9 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -114,12 +112,6 @@ public class MainActivity  extends FragmentActivity
         tab3.setIcon(getResources().getDrawable(R.drawable.settings));
         tab3.setTabListener(new FragmentTabListener<SettingsFragment>(this, "Settings", SettingsFragment.class));
         actionBar.addTab(tab3);
-
-        FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
-        Fragment wordDay = new WordOfDayFragment();
-        transaction.add(android.R.id.content, wordDay, "WordOfDay");
-        transaction.commit();
     }
 
 
