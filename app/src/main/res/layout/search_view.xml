@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <SearchView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <!--<SearchView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:actionViewClass="android.widget.SearchView"
-        android:queryHint="Look Up" />
+        /> -->
+
 
     <ListView
-        android:id="@+id/search_word_list"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

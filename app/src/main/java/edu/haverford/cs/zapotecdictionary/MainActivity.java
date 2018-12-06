@@ -52,6 +52,7 @@ public class MainActivity  extends FragmentActivity
     protected WordViewFragment wf;
     protected HistoryFragment hf;
     protected SettingsFragment sf;
+    protected SearchFragment searchFragment;
     protected DBHelper db;
     private Bundle savedState;
 
@@ -62,6 +63,8 @@ public class MainActivity  extends FragmentActivity
         wf = new WordViewFragment();
         hf = new HistoryFragment();
         sf = new SettingsFragment();
+        searchFragment = new SearchFragment();
+
         db = new DBHelper(getApplicationContext());
 
         if (savedInstanceState != null && savedState == null) {
@@ -83,7 +86,7 @@ public class MainActivity  extends FragmentActivity
             downloadData.execute();
             wf.setDB(db);
             hf.setDB(db);
-            new SearchFragment().setDB(db);
+            searchFragment.setDB(db);
         }
 
         actionBar = getActionBar();
@@ -117,7 +120,6 @@ public class MainActivity  extends FragmentActivity
         Fragment wordDay = new WordOfDayFragment();
         transaction.add(android.R.id.content, wordDay, "WordOfDay");
         transaction.commit();
-
     }
 
 

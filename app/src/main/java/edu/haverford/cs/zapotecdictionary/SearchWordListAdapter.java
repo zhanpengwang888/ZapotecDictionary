@@ -56,7 +56,7 @@ public class SearchWordListAdapter extends BaseAdapter implements ListAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final DictionaryWord word = searchWordList.get(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.search_view, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.search_item, parent, false);
         }
         TextView english = (TextView) convertView.findViewById(R.id.english);
         TextView spanish = (TextView) convertView.findViewById(R.id.spanish);

@@ -9,11 +9,11 @@
     android:background="#E5E6E0"
     android:orientation="vertical">
 
-    <SearchView
+    <!--<SearchView
         android:id="@+id/searchWords_searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="Look Up" />
+        android:queryHint="Look Up" /> -->
 
         <RelativeLayout
             android:layout_width="match_parent"
