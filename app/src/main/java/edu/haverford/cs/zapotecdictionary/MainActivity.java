@@ -501,8 +501,9 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         }
         //test
         for(JsonObject j : objArr) {
-            db.insertNewWord(j.oid, j.lang, j.ipa, j.gloss, j.pos, j.usageExample,
-                    j.dialect, j.metaData, j.authority, j.audio, j.image, j.semantic_ids, j.czi, j.esGloss);
+            Log.e("json parse", "--------- " + j.es_gloss);
+            db.insertNewWord(j.oid, j.lang, j.ipa, j.gloss, j.pos, j.usage_example,
+                    j.dialect, j.metaData, j.authority, j.audio, j.image, j.semantic_ids, j.czi, j.es_gloss);
         }
         //test
         Log.e("dbtest", "writeDB _+_+_+_+_+_+_+_+_+_+_+_+_+" + db.getInformationFromOID(Integer.parseInt(objArr[0].oid), "lang"));
@@ -538,7 +539,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         protected String ipa;
         protected String gloss;
         protected String pos;
-        protected String usageExample;
+        protected String usage_example;
         protected String dialect;
         protected String metaData;
         protected String authority;
@@ -546,7 +547,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         protected String image;
         protected String semantic_ids;
         protected String czi;
-        protected String esGloss;
+        protected String es_gloss;
 
         public JsonObject(String oid, String lang, String ipa, String gloss, String pos, String usageExample,
                    String dialect, String metaData, String authority, String audio, String image,
@@ -556,7 +557,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             this.ipa = ipa;
             this.gloss = gloss;
             this.pos = pos;
-            this.usageExample = usageExample;
+            this.usage_example = usageExample;
             this.dialect = dialect;
             this.metaData = metaData;
             this.authority = authority;
@@ -564,7 +565,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             this.image = image;
             this.semantic_ids = semantic_ids;
             this.czi = czi;
-            this.esGloss = esGloss;
+            this.es_gloss = esGloss;
         }
     }
 }
