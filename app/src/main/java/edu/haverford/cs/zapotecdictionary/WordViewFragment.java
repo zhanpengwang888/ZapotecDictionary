@@ -41,7 +41,7 @@ public class WordViewFragment extends Fragment {
                 MediaPlayer mp = new MediaPlayer();
                 try {
                     //TODO: get message from db (zhanpeng)
-                    String audiofn = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUDIO);
+                    String audiofn = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUDIO).toString();
                     String audiofp = Environment.getExternalStoragePublicDirectory(
                             Environment.DIRECTORY_DOWNLOADS).getPath() + "/aud/" + audiofn;
                     mp.setDataSource(audiofp);

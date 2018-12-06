@@ -73,7 +73,7 @@ public class HistoryFragment extends Fragment {
 
 
     public void addNewWord(int newId) {
-        String newWord = db.getInformationFromOID(newId, DBHelper.DICTIONARY_COLUMN_LANG);
+        String newWord = db.getInformationFromOID(newId, DBHelper.DICTIONARY_COLUMN_LANG).toString();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         newWord += ("/" + dateFormat.format(date));

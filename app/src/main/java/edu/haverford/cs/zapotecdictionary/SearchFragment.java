@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SearchView;
+import java.util.ArrayList;
 
 
 public class SearchFragment extends ListFragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
@@ -66,8 +67,8 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
         View result = inflater.inflate(R.layout.search_view, container, false);
         listView = result.findViewById(android.R.id.list);
-        searchWordList.add(new DictionaryWord("aaa", "bbb", "ccc"));
-        searchWordList.add(new DictionaryWord("ddd", "eee", "fff"));
+        //searchWordList.add(new DictionaryWord("aaa", "bbb", "ccc"));
+        //searchWordList.add(new DictionaryWord("ddd", "eee", "fff"));
         listAdapter = new SearchWordListAdapter(getActivity(), searchWordList);
         listView.setAdapter(listAdapter);
         return result;
@@ -75,7 +76,6 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        final DBHelper finalDB = db;
         menuInflater.inflate(R.menu.search_menu, menu);
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
         sv = new SearchView(getActivity());
@@ -108,18 +108,24 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
                 transaction.commit();
             }
             Log.e("textChange", "-------------------------" + s);
-            SearchWordList res = searchWordList;
-            if (s != null && !s.isEmpty()) {
-                SearchWordList tmp = new SearchWordList();
-                for (int i = 0; i < searchWordList.size(); i++) {
-                    DictionaryWord word = searchWordList.get(i);
-                    if (word.getEnglish().contains(s) || word.getSpanish().contains(s) || word.getZapotec().contains(s)) {
-                        tmp.add(word);
-                    }
-                }
-                res = tmp;
+            //SearchWordList res = searchWordList;
+
+            SearchWordList tmp = new SearchWordList();
+            ArrayList<Integer> oids = db.getOidsForQueryMatchingString(s);
+
+            for (Integer oid : oids) {
+                StringBuilder spanish = db.getInformationFromOID(oid, db.DICTIONARY_COLUMN_ES_GLOSS);
+                spanish = spanish.length() == 0 ? new StringBuilder("Spanish: ") : spanish.insert(0, "Spanish: ");
+                StringBuilder english = db.getInformationFromOID(oid, db.DICTIONARY_COLUMN_GLOSSARY);
+                english = english.length() == 0 ? new StringBuilder("English: ") : english.insert(0, "English: ");
+                StringBuilder zapotec = db.getInformationFromOID(oid, db.DICTIONARY_COLUMN_LANG);
+                zapotec = zapotec.length() == 0 ? new StringBuilder("Zapotec: ") : zapotec.insert(0, "Zapotec: ");
+                tmp.add(new DictionaryWord(spanish.toString(), english.toString(), zapotec.toString()));
             }
-            listAdapter = new SearchWordListAdapter(getActivity(), res);
+            searchWordList = tmp;
+            //res = tmp;
+
+            listAdapter = new SearchWordListAdapter(getActivity(), searchWordList);
             listView.setAdapter(listAdapter);
             return true;
         } else {

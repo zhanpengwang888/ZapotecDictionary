@@ -97,28 +97,33 @@ public class DBHelper extends SQLiteOpenHelper {
         return mDB.rawQuery("SELECT * FROM "+DICTIONARY_TABLE_NAME+" WHERE oid ="+oid+"", null);
     }
 
-    public String getInformationFromOID(int oid, String queryRequest) {
+    public StringBuilder getInformationFromOID(int oid, String queryRequest) {
         Cursor cur = getData(oid);
         cur.moveToFirst();
         StringBuilder sb = new StringBuilder();
-        sb.append(cur.getString(cur.getColumnIndex(queryRequest)));
+        String tmp = cur.getString(cur.getColumnIndex(queryRequest));
+        if (tmp != null) {
+            sb.append(tmp);
+        }
         cur.close();
-        return sb.toString();
+        return sb;
     }
 
     public ArrayList<Integer> getOidsForQueryMatchingString(String queryText) {
         ArrayList<Integer> oids = new ArrayList<>();
         //queryText = Arrays.toString(queryText.split(" "));
         String queryString = "SELECT * FROM " + DICTIONARY_TABLE_NAME + " WHERE " +
-                DICTIONARY_COLUMN_ES_GLOSS + " LIKE " + '%' + queryText +'%' + " OR " + DICTIONARY_COLUMN_GLOSSARY
-                + " LIKE " + '%' + queryText + '%' + " OR " + DICTIONARY_COLUMN_LANG + " LIKE " + '%' + queryText +
-                '%';
+                DICTIONARY_COLUMN_ES_GLOSS + " LIKE " +"\'%" + queryText + "%\'" + " OR " + DICTIONARY_COLUMN_GLOSSARY
+                + " LIKE " + "\'%" + queryText + "%\'" + " OR " + DICTIONARY_COLUMN_LANG + " LIKE " + "\'%" + queryText +
+                "%\'";
         mDB = this.getReadableDatabase();
         Cursor cur = mDB.rawQuery(queryString, null);
         cur.moveToFirst();
         while (!cur.isAfterLast()) {
             oids.add(Integer.parseInt(cur.getString(cur.getColumnIndex(DICTIONARY_COLUMN_OID))));
+            cur.moveToNext();
         }
+        cur.close();
         return oids;
     }
 }
