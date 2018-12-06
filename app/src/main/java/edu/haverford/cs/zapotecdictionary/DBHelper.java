@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class DBHelper extends SQLiteOpenHelper {
     protected static final String TAG = "DBHelper";
     protected static final String DATABASE_NAME = "zapotecDictionaryDB.db";
@@ -102,5 +106,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return sb.toString();
     }
 
+    public ArrayList<Integer> getOidsForQueryMatchingString(String queryText) {
+        ArrayList<Integer> oids = new ArrayList<>();
+        //queryText = Arrays.toString(queryText.split(" "));
+        String queryString = "SELECT * FROM " + DICTIONARY_TABLE_NAME + " WHERE " +
+                DICTIONARY_COLUMN_ES_GLOSS + " LIKE " + '%' + queryText +'%' + " OR " + DICTIONARY_COLUMN_GLOSSARY
+                + " LIKE " + '%' + queryText + '%' + " OR " + DICTIONARY_COLUMN_LANG + " LIKE " + '%' + queryText +
+                '%';
+        mDB = this.getReadableDatabase();
+        Cursor cur = mDB.rawQuery(queryString, null);
+        cur.moveToFirst();
+        while (!cur.isAfterLast()) {
+            oids.add(Integer.parseInt(cur.getString(cur.getColumnIndex(DICTIONARY_COLUMN_OID))));
+        }
+        return oids;
+    }
 }
 
