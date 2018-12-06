@@ -4,6 +4,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,5 +58,6 @@ public class WordViewFragment extends Fragment {
 
     public void set_curId(int newId) {
         oid = newId;
+        Log.e("mieoid", "+++++++++ " + oid);
     }
 }

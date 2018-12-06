@@ -1,5 +1,6 @@
 package edu.haverford.cs.zapotecdictionary;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,14 +13,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+
 import java.util.ArrayList;
 
 
 public class SearchFragment extends ListFragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
-    SendText mCallback;
+    protected static SendText mCallback;
     private static DBHelper db;
     //protected MenuItem searchMenuItem;
     protected SearchView sv;
@@ -27,6 +30,10 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
     private SearchWordListAdapter listAdapter;
     private SearchWordList searchWordList;
     private static String oldQuery;
+
+    public interface SendText {
+        public void sendText(int msg);
+    }
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
@@ -43,13 +50,27 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
         return oldQuery;
     }
 
-    public interface SendText {
-        public void sendText(int msg);
-    }
-
     public SearchFragment() {
         super();
         searchWordList = new SearchWordList();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (SendText) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement TextClicked");
+        }
+    }
+
+    public void sendOid(int oid){
+        mCallback.sendText(oid);
     }
 
 
@@ -120,13 +141,20 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
                 english = english.length() == 0 ? new StringBuilder("English: ") : english.insert(0, "English: ");
                 StringBuilder zapotec = db.getInformationFromOID(oid, db.DICTIONARY_COLUMN_LANG);
                 zapotec = zapotec.length() == 0 ? new StringBuilder("Zapotec: ") : zapotec.insert(0, "Zapotec: ");
-                tmp.add(new DictionaryWord(spanish.toString(), english.toString(), zapotec.toString()));
+                tmp.add(new DictionaryWord(oid, spanish.toString(), english.toString(), zapotec.toString()));
             }
             searchWordList = tmp;
             //res = tmp;
 
             listAdapter = new SearchWordListAdapter(getActivity(), searchWordList);
             listView.setAdapter(listAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    DictionaryWord item = searchWordList.get(i);
+                    sendOid(item.getOid());
+                }
+            });
             return true;
         } else {
             Fragment f = fm.findFragmentByTag("WordOfDay");

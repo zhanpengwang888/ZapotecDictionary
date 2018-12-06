@@ -501,7 +501,6 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         }
         //test
         for(JsonObject j : objArr) {
-            Log.e("json parse", "--------- " + j.es_gloss);
             db.insertNewWord(j.oid, j.lang, j.ipa, j.gloss, j.pos, j.usage_example,
                     j.dialect, j.metaData, j.authority, j.audio, j.image, j.semantic_ids, j.czi, j.es_gloss);
         }
