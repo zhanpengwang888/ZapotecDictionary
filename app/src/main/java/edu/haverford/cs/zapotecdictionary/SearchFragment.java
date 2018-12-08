@@ -119,7 +119,7 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextChange(String s) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        final FragmentManager fm = getActivity().getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
         oldQuery = s;
         if(s.length() != 0) {
@@ -153,6 +153,12 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     DictionaryWord item = searchWordList.get(i);
                     sendOid(item.getOid());
+                    android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+                    if(fm.findFragmentByTag("WordView") == null) {
+                        ft.add(new WordViewFragment(), "WordView");
+                    }
+                    ft.commit();
+                    fm.popBackStackImmediate("WordView", 0);
                 }
             });
             return true;

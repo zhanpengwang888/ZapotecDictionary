@@ -20,7 +20,7 @@
             android:layout_height="40dp">
 
             <TextView
-                android:id="@+id/word"
+                android:id="@+id/word_WordView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"

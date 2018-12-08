@@ -9,10 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class WordViewFragment extends Fragment {
 
-    protected DBHelper db;
+    protected static DBHelper db;
     protected static int oid;
 
     public WordViewFragment() {
@@ -25,17 +26,8 @@ public class WordViewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
-        return inflater.inflate(R.layout.word_view, container, false);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(savedInstanceState != null) {
-            onViewStateRestored(savedInstanceState);
-        }
-
-        ImageButton imb = getActivity().findViewById(R.id.searchWords_voiceE);
+        View view = inflater.inflate(R.layout.word_view, container, false);
+        ImageButton imb = view.findViewById(R.id.searchWords_voiceE);
         imb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,6 +46,17 @@ public class WordViewFragment extends Fragment {
 
             }
         });
+        TextView word = view.findViewById(R.id.word_WordView);
+        word.setText(db.getInformationFromOID(oid ,DBHelper.DICTIONARY_COLUMN_LANG).toString());
+        return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState != null) {
+            onViewStateRestored(savedInstanceState);
+        }
     }
 
     public void set_curId(int newId) {
