@@ -37,7 +37,7 @@ public class WordViewFragment extends Fragment {
                 try {
                     String audiofn = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUDIO).toString();
                     String audiofp = Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_DOWNLOADS).getPath() + "/aud/" + audiofn;
+                            Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/aud/" + audiofn;
                     mp.setDataSource(audiofp);
                     mp.prepare();
                     mp.start();
@@ -59,8 +59,9 @@ public class WordViewFragment extends Fragment {
         String pic = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_IMAGE).toString();
         if(pic != null) {
             String pic_fp = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS).getPath() + "/pix/" + pic;
-            Bitmap bMap = BitmapFactory.decodeFile("/sdcard/test2.png");
+                    Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + pic;
+
+            Bitmap bMap = BitmapFactory.decodeFile(pic_fp);
             img.setImageBitmap(bMap);
         }
         return view;
