@@ -88,8 +88,6 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
         View result = inflater.inflate(R.layout.search_view, container, false);
         listView = result.findViewById(android.R.id.list);
-        //searchWordList.add(new DictionaryWord("aaa", "bbb", "ccc"));
-        //searchWordList.add(new DictionaryWord("ddd", "eee", "fff"));
         listAdapter = new SearchWordListAdapter(getActivity(), searchWordList);
         listView.setAdapter(listAdapter);
         return result;
@@ -145,7 +143,6 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
             }
             searchWordList = tmp;
             //res = tmp;
-
             listAdapter = new SearchWordListAdapter(getActivity(), searchWordList);
             listView.setAdapter(listAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

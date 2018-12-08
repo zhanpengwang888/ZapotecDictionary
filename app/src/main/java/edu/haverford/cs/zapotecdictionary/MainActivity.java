@@ -20,6 +20,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -493,7 +494,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             } catch (IOException e) {
             }
         }
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         JsonObject[] objArr = gson.fromJson(sb.toString(), JsonObject[].class);
         //test
         if(objArr.length > 0) {
@@ -501,11 +502,16 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         }
         //test
         for(JsonObject j : objArr) {
-            db.insertNewWord(j.oid, j.lang, j.ipa, j.gloss, j.pos, j.usage_example,
-                    j.dialect, j.metaData, j.authority, j.audio, j.image, j.semantic_ids, j.czi, j.es_gloss);
+            // test
+//            Log.e("lang ----", "---" + j.getLang() + " " + j.getIpa() + " " + j.getGloss() + " " + j.getPos() + " " + j.getUsage_example()
+//            + j.getDialect() + " " + j.getMetadata() + " " + j.getAuthority() + " " + j.getAudio() + " " + j.getImage() + " " + j.getSemantic_ids() +
+//            " " + j.getCzi() + " " + j.getEs_gloss());
+            // test
+            db.insertNewWord(j.oid, j.getLang(), j.getIpa(), j.getGloss(), j.getPos(), j.getUsage_example(),
+                    j.getDialect(), j.getMetadata(), j.getAuthority(), j.getAudio(), j.getImage(), j.getSemantic_ids(), j.getCzi(), j.getEs_gloss());
         }
         //test
-        Log.e("dbtest", "writeDB _+_+_+_+_+_+_+_+_+_+_+_+_+" + db.getInformationFromOID(Integer.parseInt(objArr[0].oid), "lang"));
+        Log.e("dbtest", "writeDB _+_+_+_+_+_+_+_+_+_+_+_+_+" + db.getInformationFromOID(Integer.parseInt(objArr[0].oid), "metadata"));
         //test
     }
 
@@ -540,7 +546,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         protected String pos;
         protected String usage_example;
         protected String dialect;
-        protected String metaData;
+        protected String metadata;
         protected String authority;
         protected String audio;
         protected String image;
@@ -558,13 +564,104 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             this.pos = pos;
             this.usage_example = usageExample;
             this.dialect = dialect;
-            this.metaData = metaData;
+            this.metadata = metaData;
             this.authority = authority;
             this.audio = audio;
             this.image = image;
             this.semantic_ids = semantic_ids;
             this.czi = czi;
             this.es_gloss = esGloss;
+        }
+
+        public String getLang() {
+            if (this.lang != null) {
+                return this.lang.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.lang;
+        }
+
+        public String getIpa() {
+            if (this.ipa != null) {
+                return this.ipa.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.ipa;
+        }
+
+        public String getGloss() {
+            if (this.gloss != null) {
+                return this.gloss.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.gloss;
+        }
+
+        public String getPos() {
+            if (this.pos != null) {
+                return this.pos.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.pos;
+        }
+
+        public String getUsage_example() {
+            if (this.usage_example != null) {
+                return this.usage_example.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.usage_example;
+        }
+
+        public String getDialect() {
+            if (this.dialect != null) {
+                return this.dialect.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.dialect;
+        }
+
+        public String getMetadata() {
+            if (this.metadata != null) {
+                return this.metadata.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.metadata;
+        }
+
+        public String getAuthority() {
+            if (this.authority != null) {
+                return this.authority.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.authority;
+        }
+
+        public String getAudio() {
+            if (this.audio != null) {
+                return this.audio.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.audio;
+        }
+
+        public String getImage() {
+            if (this.image != null) {
+                return this.image.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.image;
+        }
+
+        public String getSemantic_ids() {
+            if (this.semantic_ids != null) {
+                return this.semantic_ids.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.semantic_ids;
+        }
+
+        public String getCzi() {
+            if (this.ipa != null) {
+                return this.ipa.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.ipa;
+        }
+
+        public String getEs_gloss() {
+            if (this.es_gloss != null) {
+                return this.es_gloss.replace("&#8217;", "'").replace("&quot;", "\"");
+            }
+            return this.es_gloss;
         }
     }
 }
