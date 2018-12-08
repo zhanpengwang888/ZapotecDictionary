@@ -85,7 +85,17 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/searchWords_posAcceptation"
+            android:id="@+id/word_eng_def"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="@string/wordDef"
+            android:textSize="15dp" />
+        <TextView
+            android:id="@+id/word_es_def"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
@@ -119,6 +129,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/word_pic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"

@@ -54,15 +54,9 @@ public class FragmentTabListener<T extends Fragment> implements TabListener {
 
     public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
         FragmentTransaction sft = mActivity.getSupportFragmentManager().beginTransaction();
-        // Check if the fragment is already initialized
-        if (mFragment == null) {
-            // If not, instantiate and add it to the activity
-            mFragment = Fragment.instantiate(mActivity, mClass.getName(), mfragmentArgs);
-            sft.add(mfragmentContainerId, mFragment, mTag);
-        } else {
-            // If it exists, simply attach it in order to show it
-            sft.attach(mFragment);
-        }
+        mFragment = Fragment.instantiate(mActivity, mClass.getName(), mfragmentArgs);
+        sft.add(mfragmentContainerId, mFragment, mTag);
+        sft.replace(android.R.id.content, mFragment, mTag);
         if(tab.getPosition() != 0) {
             Fragment cur = null;
             try {

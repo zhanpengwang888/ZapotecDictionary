@@ -116,10 +116,11 @@ public class MainActivity  extends FragmentActivity
     }
 
 
-    @Override public void sendText(int msg) {
+    @Override public void sendText(int msg, boolean addHistory) {
         wf.set_curId(msg);
-        HistoryFragment hf = new HistoryFragment();
-        hf.addNewWord(msg);
+        if(addHistory) {
+            hf.addNewWord(msg);
+        }
     }
 
     /*
@@ -164,6 +165,7 @@ public class MainActivity  extends FragmentActivity
             }
         }
         editor.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
+        editor.putStringSet("historyIndex", new HashSet<String>(hf.getHistoryIndices()));
         editor.commit();
     }
 

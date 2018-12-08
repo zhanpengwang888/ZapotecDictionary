@@ -10,19 +10,27 @@ import java.util.LinkedList;
 public class HistoryList extends AbstractList<String> {
     private final DataSetObservable dataSetObservable;
     protected final LinkedList<String> historyOfWords;
+    protected LinkedList<Integer> historyWordsIndex;
 
     public HistoryList() {
         this.dataSetObservable = new DataSetObservable();
         this.historyOfWords = new LinkedList<>();
+        this.historyWordsIndex = new LinkedList<>();
     }
 
     public LinkedList<String> getHistoryList() {
         return historyOfWords;
     }
 
+    public LinkedList<Integer> getIndexList() {
+        return historyWordsIndex;
+    }
+
     public void addAllToList(ArrayList<String> words) {
         historyOfWords.addAll(words);
     }
+
+    public void addAllIndex(ArrayList<Integer> indices) { historyWordsIndex.addAll(indices); }
 
     protected void notifyChanged() {
         this.dataSetObservable.notifyChanged();
@@ -30,6 +38,18 @@ public class HistoryList extends AbstractList<String> {
 
     public void registerDataSetObserver(DataSetObserver observer) {
         this.dataSetObservable.registerObserver(observer);
+    }
+
+    public void addOid(int oid) {
+        historyWordsIndex.offerFirst(oid);
+    }
+
+    public int getOid(int index) {
+        return historyWordsIndex.get(index);
+    }
+
+    public boolean containOid(int oid) {
+        return historyWordsIndex.contains(oid);
     }
 
     public void unregisterDataSetObserver(DataSetObserver observer) {
@@ -63,5 +83,11 @@ public class HistoryList extends AbstractList<String> {
     @Override
     public int size() {
         return historyOfWords.size();
+    }
+
+    public void removeById(int index) {
+        historyOfWords.remove(index);
+        historyWordsIndex.remove(index);
+        return;
     }
 }

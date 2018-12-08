@@ -32,7 +32,7 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
     private static String oldQuery;
 
     public interface SendText {
-        public void sendText(int msg);
+        public void sendText(int msg, boolean addHistory);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
     }
 
     public void sendOid(int oid){
-        mCallback.sendText(oid);
+        mCallback.sendText(oid, true);
     }
 
 
@@ -151,11 +151,14 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
                     DictionaryWord item = searchWordList.get(i);
                     sendOid(item.getOid());
                     android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-                    if(fm.findFragmentByTag("WordView") == null) {
-                        ft.add(new WordViewFragment(), "WordView");
+                    Fragment f = fm.findFragmentByTag("WordView");
+                    if(f != null) {
+                        ft.remove(f);
                     }
-                    ft.commit();
-                    fm.popBackStackImmediate("WordView", 0);
+                    f = new WordViewFragment();
+                    ft.replace(android.R.id.content, f, "WordView")
+                            .addToBackStack("Search")
+                            .commit();
                 }
             });
             return true;
