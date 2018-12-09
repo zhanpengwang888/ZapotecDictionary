@@ -70,6 +70,10 @@ public class HistoryFragment extends Fragment {
         historyOfWords.addAllToList(historyList);
     }
 
+    protected int getHistorySize() {
+        return historyOfWords != null ? historyOfWords.size() : -1;
+    }
+
 
     public void sendOid(int oid, boolean addHistory){
         mCallback.sendText(oid, addHistory);
@@ -115,7 +119,6 @@ public class HistoryFragment extends Fragment {
             HashSet<String> hs = (HashSet<String>) sp.getStringSet("historyList", new HashSet<String>());
             historyOfWords.addAllToList(new ArrayList<String>(hs));
         }
-        //TODO: onRestart adding duplicate words to history
         if(savedInstanceState != null) {
             ArrayList<String> store = savedInstanceState.getStringArrayList("historyList");
             historyOfWords.addAllToList(store);

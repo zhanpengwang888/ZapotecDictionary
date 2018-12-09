@@ -7,6 +7,7 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
 
 public class HistoryList extends AbstractList<String> {
     private final DataSetObservable dataSetObservable;
@@ -69,7 +70,7 @@ public class HistoryList extends AbstractList<String> {
 
     public void addOid(String word) {
         String[] args = word.split("@");
-        historyWordOids.put(args[1], new Tuple(Integer.parseInt(args[0]), historyOfWords.size()-1));
+        historyWordOids.put(args[1], new Tuple(Integer.parseInt(args[0]), 0));
     }
 
     public int get_word_Oid(String word) {
@@ -90,6 +91,13 @@ public class HistoryList extends AbstractList<String> {
             Tuple t = historyWordOids.get(word);
             historyOfWords.remove(t.getWindex());
             historyWordOids.remove(word);
+            Set<String> keys = historyWordOids.keySet();
+            for(String k : keys) {
+                Tuple curT = historyWordOids.get(k);
+                if(curT.getWindex() > t.getWindex()) {
+                    historyWordOids.put(k, new Tuple(curT.getWoid(), curT.getWindex()-1));
+                }
+            }
         }
         return;
     }

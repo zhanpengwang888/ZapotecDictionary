@@ -79,13 +79,17 @@ public class MainActivity  extends FragmentActivity
                                     Manifest.permission.INTERNET,
                                     Manifest.permission.ACCESS_NETWORK_STATE};
             requestPermissions(permission, R.integer.WRITE_GET_PERM);
-        } else {
-            String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
-            DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
-            downloadData.execute();
-            wf.setDB(db);
-            hf.setDB(db);
-            searchFragment.setDB(db);
+        }
+        String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
+        DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
+        downloadData.execute();
+        wf.setDB(db);
+        hf.setDB(db);
+        searchFragment.setDB(db);
+
+
+        if(hf != null && hf.getHistorySize() > 0) {
+            //TODO: set wordofday
         }
 
         actionBar = getActionBar();
@@ -165,19 +169,12 @@ public class MainActivity  extends FragmentActivity
             }
         }
         editor.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
-        //editor.putStringSet("historyIndex", new HashSet<String>(hf.getHistoryIndices()));
         editor.commit();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
-//        SharedPreferences.Editor se = sp.edit();
-//        se.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
-//        se.commit();
-//        savedState = new Bundle();
-//        savedState.putStringArrayList("historyList", hf.getHistoryList());
     }
 
 
