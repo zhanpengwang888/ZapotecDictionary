@@ -61,8 +61,9 @@ public class HistoryListAdapter extends BaseAdapter implements ListAdapter {
         }
         TextView theWord = (TextView) convertView.findViewById(R.id.zapotec_word);
         TextView date = (TextView) convertView.findViewById(R.id.word_date);
-        String[] wordInfo = word.split("/");
-        theWord.setText(wordInfo[0]);
+        String[] wordInfo = word.split("@");
+        theWord.setText(wordInfo[1]);
+        date.setText(wordInfo[2]);
         //date.setText(wordInfo[1]);
         return convertView;
     }

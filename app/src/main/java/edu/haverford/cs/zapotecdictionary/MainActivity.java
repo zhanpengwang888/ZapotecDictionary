@@ -165,7 +165,7 @@ public class MainActivity  extends FragmentActivity
             }
         }
         editor.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
-        editor.putStringSet("historyIndex", new HashSet<String>(hf.getHistoryIndices()));
+        //editor.putStringSet("historyIndex", new HashSet<String>(hf.getHistoryIndices()));
         editor.commit();
     }
 
@@ -352,7 +352,6 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         FileOutputStream out = null;
         byte[] buffer = new byte[1024];
         int dataSize = 0;
-
         String urlParameters = getUrlParameters(dict, null, "TRUE", dl_type, last_hash, null);
         byte[] dldata = urlParameters.getBytes(Charset.defaultCharset());
 
@@ -427,13 +426,18 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         try
         {
             File file = new File(zip_source);
-
+            Log.e("unzip1 ", "download1");
             ZipFile zip = new ZipFile(file);
-
+            Log.e("unzip2 ", "download2");
+            Thread.sleep(1000);
             File des = new File(destination);
+            Thread.sleep(1000);
+            Log.e("unzip3 ", "download3");
             des.mkdir();
+            Thread.sleep(1000);
             Enumeration zipFileEntries = zip.entries();
-
+            Thread.sleep(1000);
+            Log.e("unzip4 ", "download4");
             while (zipFileEntries.hasMoreElements())
             {
                 ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
@@ -458,6 +462,12 @@ class DownloadData extends AsyncTask<String, Void, Void> {
                     dest.close();
                     is.close();
                 }
+            }
+
+            File oldUpdate = new File(zip_source);
+            Log.e("delete old", oldUpdate.getPath());
+            if(oldUpdate.exists()) {
+                oldUpdate.delete();
             }
         }
         catch (Exception e)
@@ -527,7 +537,6 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             for(int i = 0; i < 4; i++) {
                 if(sp.getBoolean(Integer.toString(i), false)) {
                     target = i;
-                    Log.e("target", "===========" + target);
                     break;
                 }
             }

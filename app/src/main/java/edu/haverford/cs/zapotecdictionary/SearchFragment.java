@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -126,7 +125,7 @@ public class SearchFragment extends ListFragment implements SearchView.OnQueryTe
                 transaction.remove(f);
                 transaction.commit();
             }
-            Log.e("textChange", "-------------------------" + s);
+            //Log.e("textChange", "-------------------------" + s);
             //SearchWordList res = searchWordList;
 
             SearchWordList tmp = new SearchWordList();

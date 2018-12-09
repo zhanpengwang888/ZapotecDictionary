@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 public class HistoryFragment extends Fragment {
 
@@ -58,22 +57,19 @@ public class HistoryFragment extends Fragment {
         return new ArrayList<String>(historyOfWords.getHistoryList());
     }
 
-    protected ArrayList<String> getHistoryIndices() {
-        LinkedList<Integer> indices = historyOfWords.getIndexList();
-        ArrayList<String> historyIndices = new ArrayList<>();
-        for(int i : indices) {
-            historyIndices.add(Integer.toString(i));
-        }
-        return historyIndices;
-    }
+//    protected ArrayList<String> getHistoryIndices() {
+////        LinkedList<Integer> indices = historyOfWords.getIndexList();
+////        ArrayList<String> historyIndices = new ArrayList<>();
+////        for(int i : indices) {
+////            historyIndices.add(Integer.toString(i));
+////        }
+////        return historyIndices;
+////    }
 
     protected void restoreHistoryList(ArrayList<String> historyList) {
         historyOfWords.addAllToList(historyList);
     }
 
-    protected void restoreHistoryIndex(ArrayList<Integer> historyIndices) {
-        historyOfWords.addAllIndex(historyIndices);
-    }
 
     public void sendOid(int oid, boolean addHistory){
         mCallback.sendText(oid, addHistory);
@@ -117,37 +113,31 @@ public class HistoryFragment extends Fragment {
         SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
         if(sp != null) {
             HashSet<String> hs = (HashSet<String>) sp.getStringSet("historyList", new HashSet<String>());
-            HashSet<String> temp = (HashSet<String>) sp.getStringSet("historyIndex", new HashSet<String>());
-            HashSet<Integer> hi = new HashSet<>();
-            for (String str : temp) {
-                hi.add(Integer.parseInt(str));
-            }
-            restoreHistoryList(new ArrayList<String>(hs));
-            restoreHistoryIndex(new ArrayList<Integer>(hi));
+            historyOfWords.addAllToList(new ArrayList<String>(hs));
         }
         //TODO: onRestart adding duplicate words to history
         if(savedInstanceState != null) {
             ArrayList<String> store = savedInstanceState.getStringArrayList("historyList");
-            historyOfWords.addAll(store);
-            historyOfWords.addAllIndex(savedInstanceState.getIntegerArrayList("historyIndex"));
+            historyOfWords.addAllToList(store);
+            //historyOfWords.addAllIndex(savedInstanceState.getIntegerArrayList("historyIndex"));
             savedInstanceState = null;
         }
         super.onActivityCreated(savedInstanceState);
     }
 
 
-    public void addNewWord(int newId) {
-        String newWord = db.getInformationFromOID(newId, DBHelper.DICTIONARY_COLUMN_LANG).toString();
+    public void addNewWord(int newOid) {
+        StringBuilder sb = new StringBuilder(Integer.toString(newOid));
+        String newWord = db.getInformationFromOID(newOid, DBHelper.DICTIONARY_COLUMN_LANG).toString();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        newWord += ("/" + dateFormat.format(date));
-        for(int i = 0; i < historyOfWords.getIndexList().size(); i++) {
-            if(historyOfWords.getOid(i) == newId) {
-                historyOfWords.removeById(i);
-            }
+        sb.append("@").append(newWord).append("@").append(dateFormat.format(date));
+        //TODO: remove and update old ones
+        if(historyOfWords.containsWord(newWord)) {
+            historyOfWords.removeWord(newWord);
         }
-        historyOfWords.add(newWord);
-        historyOfWords.addOid(newId);
+        historyOfWords.add(sb.toString());
+        //historyOfWords.addOid(newWord, newId);
     }
 
 
@@ -156,7 +146,7 @@ public class HistoryFragment extends Fragment {
         super.onSaveInstanceState(outState);
         ArrayList<String> store = new ArrayList<>(historyOfWords.getHistoryList());
         outState.putStringArrayList("history", store);
-        outState.putIntegerArrayList("historyIndex", new ArrayList<Integer>(historyOfWords.getIndexList()));
+        //outState.putIntegerArrayList("historyIndex", new ArrayList<Integer>(historyOfWords.getIndexList()));
     }
 
 

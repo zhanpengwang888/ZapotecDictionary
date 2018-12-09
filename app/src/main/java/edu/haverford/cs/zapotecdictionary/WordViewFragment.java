@@ -33,6 +33,7 @@ public class WordViewFragment extends Fragment {
         imb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: if no audio downloaded yet display a message to user, same thing with pictures!
                 MediaPlayer mp = new MediaPlayer();
                 try {
                     String audiofn = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUDIO).toString();

@@ -5,32 +5,59 @@ import android.database.DataSetObserver;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class HistoryList extends AbstractList<String> {
     private final DataSetObservable dataSetObservable;
     protected final LinkedList<String> historyOfWords;
-    protected LinkedList<Integer> historyWordsIndex;
+    //protected LinkedList<Integer> historyWordsIndex;
+    protected static HashMap<String, Tuple> historyWordOids;
 
     public HistoryList() {
         this.dataSetObservable = new DataSetObservable();
         this.historyOfWords = new LinkedList<>();
-        this.historyWordsIndex = new LinkedList<>();
+        this.historyWordOids = new HashMap<>();
+    }
+
+    class Tuple {
+        int woid;
+        int windex;
+
+        public Tuple(int oid, int index) {
+            this.woid = oid;
+            this.windex = index;
+        }
+
+        public int getWoid() {
+            return woid;
+        }
+
+        public int getWindex() {
+            return windex;
+        }
     }
 
     public LinkedList<String> getHistoryList() {
         return historyOfWords;
     }
 
-    public LinkedList<Integer> getIndexList() {
-        return historyWordsIndex;
+    public boolean containsWord(String word) {
+        return historyWordOids != null ? historyWordOids.containsKey(word) : false;
     }
+
+//    public LinkedList<Integer> getIndexList() {
+//        return historyWordsIndex;
+//    }
 
     public void addAllToList(ArrayList<String> words) {
-        historyOfWords.addAll(words);
+        for(String w : words) {
+            add(w);
+        }
+        //historyOfWords.addAll(words);
     }
 
-    public void addAllIndex(ArrayList<Integer> indices) { historyWordsIndex.addAll(indices); }
+    //public void addAllIndex(ArrayList<Integer> indices) { historyWordsIndex.addAll(indices); }
 
     protected void notifyChanged() {
         this.dataSetObservable.notifyChanged();
@@ -40,27 +67,51 @@ public class HistoryList extends AbstractList<String> {
         this.dataSetObservable.registerObserver(observer);
     }
 
-    public void addOid(int oid) {
-        historyWordsIndex.offerFirst(oid);
+    public void addOid(String word) {
+        String[] args = word.split("@");
+        historyWordOids.put(args[1], new Tuple(Integer.parseInt(args[0]), historyOfWords.size()-1));
+    }
+
+    public int get_word_Oid(String word) {
+        if(historyWordOids == null) {
+            return -1;
+        }
+        return historyWordOids.containsKey(word) ? historyWordOids.get(word).getWoid() : -1;
     }
 
     public int getOid(int index) {
-        return historyWordsIndex.get(index);
+        String target_word = historyOfWords.get(index);
+        String[] args = target_word.split("@");
+        return Integer.parseInt(args[0]);
     }
 
-    public boolean containOid(int oid) {
-        return historyWordsIndex.contains(oid);
+    public void removeWord(String word) {
+        if(historyWordOids != null && historyWordOids.size() > 0) {
+            Tuple t = historyWordOids.get(word);
+            historyOfWords.remove(t.getWindex());
+            historyWordOids.remove(word);
+        }
+        return;
     }
 
-    public void unregisterDataSetObserver(DataSetObserver observer) {
-        this.dataSetObservable.unregisterObserver(observer);
-    }
 
     @Override
     public boolean add(String word) {
-        boolean isAddSuccessful = historyOfWords.offerFirst(word);
-        notifyChanged();
-        return isAddSuccessful;
+        String[] args = word.split("@");
+        if(historyWordOids != null && historyWordOids.containsKey(args[1]) == false) {
+            boolean isAddSuccessful = historyOfWords.offerFirst(word);
+            if(isAddSuccessful) {
+                addOid(word);
+                notifyChanged();
+            }
+            return isAddSuccessful;
+        }
+        return false;
+    }
+
+
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+        this.dataSetObservable.unregisterObserver(observer);
     }
 
 
@@ -85,9 +136,9 @@ public class HistoryList extends AbstractList<String> {
         return historyOfWords.size();
     }
 
-    public void removeById(int index) {
-        historyOfWords.remove(index);
-        historyWordsIndex.remove(index);
-        return;
-    }
+//    public void removeById(int index) {
+//        historyOfWords.remove(index);
+//        historyWordOids.remove
+//        return;
+//    }
 }
