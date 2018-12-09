@@ -70,6 +70,11 @@ public class HistoryList extends AbstractList<String> {
 
     public void addOid(String word) {
         String[] args = word.split("@");
+        Set<String> keys = historyWordOids.keySet();
+        for(String k : keys) {
+            Tuple curT = historyWordOids.get(k);
+            historyWordOids.put(k, new Tuple(curT.getWoid(), curT.getWindex()+1));
+        }
         historyWordOids.put(args[1], new Tuple(Integer.parseInt(args[0]), 0));
     }
 
