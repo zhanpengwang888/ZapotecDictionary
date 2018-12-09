@@ -71,11 +71,11 @@ public class HistoryList extends AbstractList<String> {
     public void addOid(String word) {
         String[] args = word.split("@");
         Set<String> keys = historyWordOids.keySet();
-        for(String k : keys) {
-            Tuple curT = historyWordOids.get(k);
-            historyWordOids.put(k, new Tuple(curT.getWoid(), curT.getWindex()+1));
-        }
-        historyWordOids.put(args[1], new Tuple(Integer.parseInt(args[0]), 0));
+//        for(String k : keys) {
+//            Tuple curT = historyWordOids.get(k);
+//            historyWordOids.put(k, new Tuple(curT.getWoid(), curT.getWindex()+1));
+//        }
+        historyWordOids.put(args[1], new Tuple(Integer.parseInt(args[0]), historyOfWords.size() - 1));
     }
 
     public int get_word_Oid(String word) {
@@ -94,7 +94,7 @@ public class HistoryList extends AbstractList<String> {
     public void removeWord(String word) {
         if(historyWordOids != null && historyWordOids.size() > 0) {
             Tuple t = historyWordOids.get(word);
-            historyOfWords.remove(t.getWindex());
+            historyOfWords.remove(historyOfWords.size() - t.getWindex() - 1);
             historyWordOids.remove(word);
             Set<String> keys = historyWordOids.keySet();
             for(String k : keys) {
