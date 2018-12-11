@@ -79,13 +79,17 @@ public class MainActivity  extends FragmentActivity
                                     Manifest.permission.INTERNET,
                                     Manifest.permission.ACCESS_NETWORK_STATE};
             requestPermissions(permission, R.integer.WRITE_GET_PERM);
-        } else {
-            String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
-            DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
-            downloadData.execute();
-            wf.setDB(db);
-            hf.setDB(db);
-            searchFragment.setDB(db);
+        }
+        String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
+        DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
+        downloadData.execute();
+        wf.setDB(db);
+        hf.setDB(db);
+        searchFragment.setDB(db);
+
+
+        if(hf != null && hf.getHistorySize() > 0) {
+            //TODO: set wordofday
         }
 
         actionBar = getActionBar();
@@ -116,10 +120,11 @@ public class MainActivity  extends FragmentActivity
     }
 
 
-    @Override public void sendText(int msg) {
+    @Override public void sendText(int msg, boolean addHistory) {
         wf.set_curId(msg);
-        HistoryFragment hf = new HistoryFragment();
-        hf.addNewWord(msg);
+        if(addHistory) {
+            hf.addNewWord(msg);
+        }
     }
 
     /*
@@ -170,12 +175,6 @@ public class MainActivity  extends FragmentActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
-//        SharedPreferences.Editor se = sp.edit();
-//        se.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
-//        se.commit();
-//        savedState = new Bundle();
-//        savedState.putStringArrayList("historyList", hf.getHistoryList());
     }
 
 
@@ -350,7 +349,6 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         FileOutputStream out = null;
         byte[] buffer = new byte[1024];
         int dataSize = 0;
-
         String urlParameters = getUrlParameters(dict, null, "TRUE", dl_type, last_hash, null);
         byte[] dldata = urlParameters.getBytes(Charset.defaultCharset());
 
@@ -425,13 +423,18 @@ class DownloadData extends AsyncTask<String, Void, Void> {
         try
         {
             File file = new File(zip_source);
-
+            Log.e("unzip1 ", "download1");
             ZipFile zip = new ZipFile(file);
-
+            Log.e("unzip2 ", "download2");
+            Thread.sleep(1000);
             File des = new File(destination);
+            Thread.sleep(1000);
+            Log.e("unzip3 ", "download3");
             des.mkdir();
+            Thread.sleep(1000);
             Enumeration zipFileEntries = zip.entries();
-
+            Thread.sleep(1000);
+            Log.e("unzip4 ", "download4");
             while (zipFileEntries.hasMoreElements())
             {
                 ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
@@ -456,6 +459,12 @@ class DownloadData extends AsyncTask<String, Void, Void> {
                     dest.close();
                     is.close();
                 }
+            }
+
+            File oldUpdate = new File(zip_source);
+            Log.e("delete old", oldUpdate.getPath());
+            if(oldUpdate.exists()) {
+                oldUpdate.delete();
             }
         }
         catch (Exception e)
@@ -525,7 +534,6 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             for(int i = 0; i < 4; i++) {
                 if(sp.getBoolean(Integer.toString(i), false)) {
                     target = i;
-                    Log.e("target", "===========" + target);
                     break;
                 }
             }

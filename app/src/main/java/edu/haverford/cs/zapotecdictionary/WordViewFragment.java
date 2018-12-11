@@ -1,14 +1,16 @@
 package edu.haverford.cs.zapotecdictionary;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class WordViewFragment extends Fragment {
@@ -31,12 +33,12 @@ public class WordViewFragment extends Fragment {
         imb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: if no audio downloaded yet display a message to user, same thing with pictures!
                 MediaPlayer mp = new MediaPlayer();
                 try {
-                    //TODO: get message from db (zhanpeng)
                     String audiofn = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUDIO).toString();
                     String audiofp = Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_DOWNLOADS).getPath() + "/aud/" + audiofn;
+                            Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/aud/" + audiofn;
                     mp.setDataSource(audiofp);
                     mp.prepare();
                     mp.start();
@@ -47,7 +49,22 @@ public class WordViewFragment extends Fragment {
             }
         });
         TextView word = view.findViewById(R.id.word_WordView);
-        word.setText(db.getInformationFromOID(oid ,DBHelper.DICTIONARY_COLUMN_LANG).toString());
+        TextView wordEngDef = view.findViewById(R.id.word_eng_def);
+        TextView wordEsDef = view.findViewById(R.id.word_es_def);
+        ImageView img = view.findViewById(R.id.word_pic);
+        word.setText(db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_LANG).toString());
+        wordEngDef.setText(db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_GLOSSARY).insert(0, "English: ").toString());
+        wordEsDef.setText(db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_ES_GLOSS).insert(0, "Spanish: ").toString());
+
+        // set picture
+        String pic = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_IMAGE).toString();
+        if(pic != null) {
+            String pic_fp = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + pic;
+
+            Bitmap bMap = BitmapFactory.decodeFile(pic_fp);
+            img.setImageBitmap(bMap);
+        }
         return view;
     }
 
@@ -61,6 +78,5 @@ public class WordViewFragment extends Fragment {
 
     public void set_curId(int newId) {
         oid = newId;
-        Log.e("mieoid", "+++++++++ " + oid);
     }
 }
