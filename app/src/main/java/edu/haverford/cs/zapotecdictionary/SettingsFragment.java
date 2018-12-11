@@ -1,4 +1,7 @@
 package edu.haverford.cs.zapotecdictionary;
+import android.net.wifi.WifiManager;
+
+
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,7 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 public class SettingsFragment extends Fragment {
-    
+
     protected static Switch[] switchArr = new Switch[4];
     private CompoundButton.OnCheckedChangeListener cb;
     private CompoundButton lastClicked;
@@ -29,6 +32,16 @@ public class SettingsFragment extends Fragment {
         switchArr[1] = view.findViewById(R.id.update_content_only);
         switchArr[2] = view.findViewById(R.id.update_content_min_audio);
         switchArr[3] = view.findViewById(R.id.update_full);
+        //switchArr[4] = view.findViewById(R.id.wifi);
+        Switch wifiSwitch = view.findViewById(R.id.wifi);
+        wifiSwitch.setChecked(false);
+        wifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
+
+            }
+        });
+
         cb = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -91,6 +104,7 @@ public class SettingsFragment extends Fragment {
         outState.putBoolean("1", switchArr[1].isChecked());
         outState.putBoolean("2", switchArr[2].isChecked());
         outState.putBoolean("3", switchArr[3].isChecked());
+        //outState.putBoolean("4", switchArr[4].isChecked());
     }
 
 
