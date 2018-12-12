@@ -117,10 +117,13 @@ public class HistoryFragment extends Fragment {
         SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
         if(sp != null) {
             HashSet<String> hs = (HashSet<String>) sp.getStringSet("historyList", new HashSet<String>());
-            historyOfWords.addAllToList(new ArrayList<String>(hs));
+            ArrayList<String> arrhs = new ArrayList<>(hs);
+            //Collections.reverse(arrhs);
+            historyOfWords.addAllToList(arrhs);
         }
         if(savedInstanceState != null) {
             ArrayList<String> store = savedInstanceState.getStringArrayList("historyList");
+            //Collections.reverse(store);
             historyOfWords.addAllToList(store);
             //historyOfWords.addAllIndex(savedInstanceState.getIntegerArrayList("historyIndex"));
             savedInstanceState = null;

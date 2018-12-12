@@ -40,7 +40,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -54,6 +54,7 @@ public class MainActivity  extends FragmentActivity
     protected HistoryFragment hf;
     protected SettingsFragment sf;
     protected SearchFragment searchFragment;
+    protected WordOfDayFragment wordfrag;
     protected DBHelper db;
     private Bundle savedState;
     protected DownloadData downloadData;
@@ -62,13 +63,18 @@ public class MainActivity  extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = new DBHelper(getApplicationContext());
+        String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
+        downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url, this);
+        downloadData.execute();
+
+
         wf = new WordViewFragment();
         hf = new HistoryFragment();
         sf = new SettingsFragment();
         sf.setmActivity(this);
         searchFragment = new SearchFragment();
 
-        db = new DBHelper(getApplicationContext());
 
         if (savedInstanceState != null && savedState == null) {
             onRestoreInstanceState(savedInstanceState);
@@ -86,12 +92,13 @@ public class MainActivity  extends FragmentActivity
         }
 
 
-        String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
-        downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url, this);
-        downloadData.execute();
+        wordfrag = new WordOfDayFragment();
         wf.setDB(db);
         hf.setDB(db);
         searchFragment.setDB(db);
+        wordfrag.setDB(db);
+        //wordfrag.set_curID(db.getOidOfRandomRow());
+
 
 
         actionBar = getActionBar();
@@ -172,7 +179,7 @@ public class MainActivity  extends FragmentActivity
             }
         }
         editor.putBoolean("wifi", sf.wifi_only);
-        editor.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
+        editor.putStringSet("historyList", new LinkedHashSet<String>(hf.getHistoryList()));
         editor.commit();
     }
 

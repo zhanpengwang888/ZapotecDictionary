@@ -6,9 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class DBHelper extends SQLiteOpenHelper {
     protected static final String TAG = "DBHelper";
@@ -36,6 +34,10 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, 1);
         DATABASE_PATH = context.getApplicationInfo().dataDir + "/databases/";
         this.mContext = context;
+    }
+
+    public boolean mDBisEmpty() {
+        return mDB == null;
     }
 
     @Override
@@ -112,6 +114,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getOidOfRandomRow() {
         String randomQueryString = "SELECT * FROM " + DICTIONARY_TABLE_NAME + " ORDER BY RANDOM() LIMIT 1";
         mDB = this.getReadableDatabase();
+
         Cursor cur = mDB.rawQuery(randomQueryString, null);
         cur.moveToFirst();
         int oidRandom = Integer.parseInt(cur.getString(cur.getColumnIndex(DICTIONARY_COLUMN_OID)));
