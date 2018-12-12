@@ -109,6 +109,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return sb;
     }
 
+    public int getOidOfRandomRow() {
+        String randomQueryString = "SELECT * FROM " + DICTIONARY_TABLE_NAME + " ORDER BY RANDOM() LIMIT 1";
+        mDB = this.getReadableDatabase();
+        Cursor cur = mDB.rawQuery(randomQueryString, null);
+        cur.moveToFirst();
+        int oidRandom = Integer.parseInt(cur.getString(cur.getColumnIndex(DICTIONARY_COLUMN_OID)));
+        cur.close();
+        return oidRandom;
+    }
+
     public ArrayList<Integer> getOidsForQueryMatchingString(String queryText) {
         ArrayList<Integer> oids = new ArrayList<>();
         //queryText = Arrays.toString(queryText.split(" "));
