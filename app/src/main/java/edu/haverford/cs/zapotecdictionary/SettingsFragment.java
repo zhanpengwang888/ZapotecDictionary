@@ -1,28 +1,38 @@
 package edu.haverford.cs.zapotecdictionary;
-import android.net.wifi.WifiManager;
-
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 public class SettingsFragment extends Fragment {
 
     protected static Switch[] switchArr = new Switch[4];
+    protected static Switch wifiSwitch;
     private CompoundButton.OnCheckedChangeListener cb;
     private CompoundButton lastClicked;
+    protected static boolean wifi_only = true;
+    protected static MainActivity mainActivity;
 
 
     public SettingsFragment () {
         super();
         lastClicked = null;
+    }
+
+    public void setmActivity(MainActivity mActivity) {
+        mainActivity = mActivity;
+    }
+
+    public boolean getWifiOnly() {
+        return wifi_only;
     }
 
     @Override
@@ -33,12 +43,20 @@ public class SettingsFragment extends Fragment {
         switchArr[2] = view.findViewById(R.id.update_content_min_audio);
         switchArr[3] = view.findViewById(R.id.update_full);
         //switchArr[4] = view.findViewById(R.id.wifi);
-        Switch wifiSwitch = view.findViewById(R.id.wifi);
-        wifiSwitch.setChecked(false);
+        wifiSwitch = view.findViewById(R.id.wifi);
+        wifiSwitch.setChecked(true);
         wifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
-
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                wifi_only = b;
+                if(b == false) {
+                    if(mainActivity != null) {
+                        mainActivity.downloadData.doInBackground(null);
+                    }
+                } else {
+                    Toast.makeText(mainActivity, "For future update, please turn off 'wifi-only' in 'Settings' and use mobile data, or connect wifi for downloading", Toast.LENGTH_LONG*3).show();
+                }
             }
         });
 
@@ -84,6 +102,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
+        wifiSwitch.setChecked(sp.getBoolean("wifi", true));
         if(sp != null) {
             for(int i = 0; i < switchArr.length; i++) {
                 switchArr[i].setChecked(sp.getBoolean(Integer.toString(i), false));
@@ -93,6 +112,7 @@ public class SettingsFragment extends Fragment {
             for(int i = 0; i < switchArr.length; i++) {
                 switchArr[i].setChecked(savedInstanceState.getBoolean(Integer.toString(i)));
             }
+            wifiSwitch.setChecked(savedInstanceState.getBoolean("wifi"));
         }
         super.onActivityCreated(savedInstanceState);
     }
@@ -104,6 +124,7 @@ public class SettingsFragment extends Fragment {
         outState.putBoolean("1", switchArr[1].isChecked());
         outState.putBoolean("2", switchArr[2].isChecked());
         outState.putBoolean("3", switchArr[3].isChecked());
+        outState.putBoolean("wifi", wifiSwitch.isChecked());
         //outState.putBoolean("4", switchArr[4].isChecked());
     }
 

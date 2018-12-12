@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,6 +56,7 @@ public class MainActivity  extends FragmentActivity
     protected SearchFragment searchFragment;
     protected DBHelper db;
     private Bundle savedState;
+    protected DownloadData downloadData;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class MainActivity  extends FragmentActivity
         wf = new WordViewFragment();
         hf = new HistoryFragment();
         sf = new SettingsFragment();
+        sf.setmActivity(this);
         searchFragment = new SearchFragment();
 
         db = new DBHelper(getApplicationContext());
@@ -80,17 +84,15 @@ public class MainActivity  extends FragmentActivity
                                     Manifest.permission.ACCESS_NETWORK_STATE};
             requestPermissions(permission, R.integer.WRITE_GET_PERM);
         }
+
+
         String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
-        DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
+        downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url, this);
         downloadData.execute();
         wf.setDB(db);
         hf.setDB(db);
         searchFragment.setDB(db);
 
-
-        if(hf != null && hf.getHistorySize() > 0) {
-            //TODO: set wordofday
-        }
 
         actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -119,7 +121,6 @@ public class MainActivity  extends FragmentActivity
         actionBar.addTab(tab3);
     }
 
-
     @Override public void sendText(int msg, boolean addHistory) {
         wf.set_curId(msg);
         if(addHistory) {
@@ -139,7 +140,9 @@ public class MainActivity  extends FragmentActivity
                     //Granted.
                     String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
 
-                    DownloadData downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url);
+                    if(downloadData != null) {
+                        downloadData = new DownloadData(db, getSharedPreferences("info", Context.MODE_PRIVATE), url, this);
+                    }
                     downloadData.execute();
                 }
                 else{
@@ -168,6 +171,7 @@ public class MainActivity  extends FragmentActivity
                 editor.putBoolean(Integer.toString(i), sf.switchArr[i].isChecked());
             }
         }
+        editor.putBoolean("wifi", sf.wifi_only);
         editor.putStringSet("historyList", new HashSet<String>(hf.getHistoryList()));
         editor.commit();
     }
@@ -175,6 +179,9 @@ public class MainActivity  extends FragmentActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(db != null) {
+            db.close();
+        }
     }
 
 
@@ -185,6 +192,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
     private static HttpURLConnection con;
     private SharedPreferences sp;
 
+    private boolean toMakeaToast = false;
     private String urlStr;
     // unzipfile name
     private final String dictionaryfp = "/tlacochahuaya_content/tlacochahuaya_export.json";
@@ -197,14 +205,22 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
     private String last_dl_type;
 
+    private MainActivity mActivity;
+
+    private static boolean wifi_only;
 
 
-    public DownloadData(DBHelper db, SharedPreferences sp, String url) {
+
+    public DownloadData(DBHelper db, SharedPreferences sp, String url, MainActivity mActivity) {
+
+        this.mActivity = mActivity;
         this.sp = sp;
         this.db = db;
         this.urlStr = url;
         con = null;
         last_dl_type = null;
+        wifi_only = true;
+
     }
 
     public String getUrlParameters(String dict, String current, String export, String dl_type, String hash, String current_hash) {
@@ -528,8 +544,26 @@ class DownloadData extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... strings){
         Integer target = null;
+
+        ConnectivityManager cm =
+                (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo wifiNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        boolean wifiConnected = wifiNetwork != null && wifiNetwork.isConnected();
+        NetworkInfo.State mobile = mobileNetwork.getState();
+
         if(sp == null) {
-            download("tlacochahuaya","1");
+            if(mActivity != null && mActivity.sf != null) {
+                wifi_only = mActivity.sf.getWifiOnly();
+            }
+            if((wifi_only == false && mobile == NetworkInfo.State.CONNECTED) || wifiConnected) {
+                download("tlacochahuaya","1");
+            } else {
+                toMakeaToast = true;
+                //Toast.makeText(mActivity, "Please turn on wifi or data, and restart for downloading dictionary data", Toast.LENGTH_LONG);
+            }
         } else {
             for(int i = 0; i < 4; i++) {
                 if(sp.getBoolean(Integer.toString(i), false)) {
@@ -537,13 +571,33 @@ class DownloadData extends AsyncTask<String, Void, Void> {
                     break;
                 }
             }
+            wifi_only = sp.getBoolean("wifi", true);
         }
-        if(target == null) {
-            download("tlacochahuaya","1");
+
+        if((wifi_only == false
+                && cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED) ||
+                cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+            if(target == null) {
+                download("tlacochahuaya","1");
+            } else {
+                download("tlacochahuaya",target.toString());
+            }
         } else {
-            download("tlacochahuaya",target.toString());
+            toMakeaToast = true;
+            //Toast.makeText(mActivity, "Please turn on wifi or data, and restart for downloading dictionary data", Toast.LENGTH_LONG);
         }
+
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(null);
+        if (toMakeaToast) {
+            Toast.makeText(mActivity, "Please turn on wifi or data, and restart for downloading dictionary data. ", Toast.LENGTH_LONG*3).show();
+            toMakeaToast = false;
+        }
+
     }
 
     class JsonObject {
@@ -585,91 +639,91 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             if (this.lang != null) {
                 return this.lang.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.lang;
+            return null;
         }
 
         public String getIpa() {
             if (this.ipa != null) {
                 return this.ipa.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.ipa;
+            return null;
         }
 
         public String getGloss() {
             if (this.gloss != null) {
                 return this.gloss.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.gloss;
+            return null;
         }
 
         public String getPos() {
             if (this.pos != null) {
                 return this.pos.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.pos;
+            return null;
         }
 
         public String getUsage_example() {
             if (this.usage_example != null) {
                 return this.usage_example.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.usage_example;
+            return null;
         }
 
         public String getDialect() {
             if (this.dialect != null) {
                 return this.dialect.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.dialect;
+            return null;
         }
 
         public String getMetadata() {
             if (this.metadata != null) {
                 return this.metadata.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.metadata;
+            return null;
         }
 
         public String getAuthority() {
             if (this.authority != null) {
                 return this.authority.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.authority;
+            return null;
         }
 
         public String getAudio() {
             if (this.audio != null) {
                 return this.audio.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.audio;
+            return null;
         }
 
         public String getImage() {
             if (this.image != null) {
                 return this.image.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.image;
+            return null;
         }
 
         public String getSemantic_ids() {
             if (this.semantic_ids != null) {
                 return this.semantic_ids.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.semantic_ids;
+            return null;
         }
 
         public String getCzi() {
-            if (this.ipa != null) {
-                return this.ipa.replace("&#8217;", "'").replace("&quot;", "\"");
+            if (this.czi != null) {
+                return this.czi.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.ipa;
+            return null;
         }
 
         public String getEs_gloss() {
             if (this.es_gloss != null) {
                 return this.es_gloss.replace("&#8217;", "'").replace("&quot;", "\"");
             }
-            return this.es_gloss;
+            return null;
         }
     }
 }

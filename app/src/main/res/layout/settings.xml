@@ -74,7 +74,7 @@
                 android:theme="@style/SwitchTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Download only if Wi-Fi is on"
+                android:text="Download with WiFi only"
                 tools:layout_editor_absoluteX="109dp"
                 tools:layout_editor_absoluteY="82dp" />
 

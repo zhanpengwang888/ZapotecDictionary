@@ -30,12 +30,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"
         android:maxSdkVersion="22"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"
-        android:maxSdkVersion="22"/>
-
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_WIFI_STATE"
-        android:minSdkVersion="23"/>
-    <uses-permission-sdk-23 android:name="android.permission.CHANGE_WIFI_STATE"
         android:minSdkVersion="23"/>
 
     <application
