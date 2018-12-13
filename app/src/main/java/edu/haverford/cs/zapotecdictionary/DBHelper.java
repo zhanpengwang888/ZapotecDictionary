@@ -27,6 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
     protected static final String DICTIONARY_COLUMN_SEMANTIC_IDS = "semantic_ids";
     protected static final String DICTIONARY_COLUMN_CZI = "czi";
     protected static final String DICTIONARY_COLUMN_ES_GLOSS = "es_gloss";
+    protected static final int DICTIONARY_DATABASE_QUERY_ERROR = -2;
     private final Context mContext;
     private SQLiteDatabase mDB;
 
@@ -34,10 +35,6 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, 1);
         DATABASE_PATH = context.getApplicationInfo().dataDir + "/databases/";
         this.mContext = context;
-    }
-
-    public boolean mDBisEmpty() {
-        return mDB == null;
     }
 
     @Override
@@ -117,7 +114,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Cursor cur = mDB.rawQuery(randomQueryString, null);
         cur.moveToFirst();
-        int oidRandom = Integer.parseInt(cur.getString(cur.getColumnIndex(DICTIONARY_COLUMN_OID)));
+        int oidRandom;
+        try {
+            oidRandom = Integer.parseInt(cur.getString(cur.getColumnIndex(DICTIONARY_COLUMN_OID)));
+        } catch (Exception e) {
+            oidRandom = DICTIONARY_DATABASE_QUERY_ERROR;
+        }
         cur.close();
         return oidRandom;
     }

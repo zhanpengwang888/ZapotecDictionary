@@ -33,11 +33,12 @@ public class WordOfDayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
         View view;
-        if(mDB.mDBisEmpty()) {
-            view = inflater.inflate(R.layout.word_day_empty, container, false);
+        int oid = mDB.getOidOfRandomRow();
+        if (oid == DBHelper.DICTIONARY_DATABASE_QUERY_ERROR) {
+           view = inflater.inflate(R.layout.word_day_empty, container, false);
         } else {
             if(randomOid == -1) {
-                randomOid = mDB.getOidOfRandomRow();
+                randomOid = oid;
             }
             view = inflater.inflate(R.layout.word_view, container, false);
             ImageButton imb = view.findViewById(R.id.searchWords_voiceE);
@@ -53,7 +54,7 @@ public class WordOfDayFragment extends Fragment {
                         mp.prepare();
                         mp.start();
                     } catch (Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext(), "The audio file does not exist.", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity().getApplicationContext(), "The audio file does not exist.", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }

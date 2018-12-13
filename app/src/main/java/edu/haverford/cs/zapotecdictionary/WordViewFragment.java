@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WordViewFragment extends Fragment {
 
@@ -44,6 +45,7 @@ public class WordViewFragment extends Fragment {
                     mp.start();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(getContext(), "The audio file does not exist.", Toast.LENGTH_SHORT).show();
                 }
 
             }
