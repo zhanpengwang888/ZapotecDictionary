@@ -40,8 +40,8 @@
 
             <ImageButton
                 android:id="@+id/searchWords_voiceE"
-                android:layout_width="13dp"
-                android:layout_height="13dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
@@ -52,12 +52,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingLeft="10dp"
-                android:paddingTop="3dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="7dp"
                 android:text="@string/zapotec"
                 android:textColor="#3B3C3D"
-                android:textSize="10dp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
     <LinearLayout
@@ -69,12 +68,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/arrow" />
 
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:paddingLeft="3dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/black_arrow" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,11 +110,11 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="30dp"
+                android:layout_width="25dp"
                 android:layout_height="30dp"
+                android:paddingLeft="3dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/arrow" />
-
+                android:src="@drawable/black_arrow" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
