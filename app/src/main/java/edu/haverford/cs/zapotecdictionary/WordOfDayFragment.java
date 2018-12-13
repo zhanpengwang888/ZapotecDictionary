@@ -64,8 +64,8 @@ public class WordOfDayFragment extends Fragment {
             TextView wordEsDef = view.findViewById(R.id.word_es_def);
             ImageView image = view.findViewById(R.id.word_pic);
             word.setText(mDB.getInformationFromOID(randomOid, DBHelper.DICTIONARY_COLUMN_LANG).toString());
-            wordEnglishDef.setText(mDB.getInformationFromOID(randomOid, DBHelper.DICTIONARY_COLUMN_GLOSSARY).toString());
-            wordEsDef.setText(mDB.getInformationFromOID(randomOid, DBHelper.DICTIONARY_COLUMN_ES_GLOSS).toString());
+            wordEnglishDef.setText(mDB.getInformationFromOID(randomOid, DBHelper.DICTIONARY_COLUMN_GLOSSARY).insert(0, "English: ").toString());
+            wordEsDef.setText(mDB.getInformationFromOID(randomOid, DBHelper.DICTIONARY_COLUMN_ES_GLOSS).insert(0, "Spanish: ").toString());
 
             // set picture
             String wordOfDay_pic = mDB.getInformationFromOID(randomOid, DBHelper.DICTIONARY_COLUMN_IMAGE).toString();
