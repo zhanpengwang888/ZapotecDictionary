@@ -49,12 +49,12 @@ public class SettingsFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                wifi_only = b;
-                if(b == false) {
+                if(b == false && wifi_only == true) {
                     Toast.makeText(mainActivity, "Please restart the app for downloading data. ", Toast.LENGTH_LONG*3).show();
                 } else {
                     Toast.makeText(mainActivity, "For future update, please turn off 'wifi-only' in 'Settings' and use mobile data, or connect wifi for downloading", Toast.LENGTH_LONG*3).show();
                 }
+                wifi_only = b;
             }
         });
 

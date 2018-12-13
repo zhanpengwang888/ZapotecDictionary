@@ -43,6 +43,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:adjustViewBounds="true"
+                android:paddingTop="1dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
                 android:src="@drawable/voice" />
@@ -51,6 +52,7 @@
                 android:id="@+id/searchWords_psE"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:paddingTop="1.5dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="7dp"
