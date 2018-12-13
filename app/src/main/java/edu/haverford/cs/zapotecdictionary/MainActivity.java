@@ -321,8 +321,6 @@ class DownloadData extends AsyncTask<String, Void, Void> {
                 e.printStackTrace();
             }
 
-            Log.e("hash code", "GET HASH ___________ " + con.getResponseCode()+ " ");
-
             in = con.getInputStream();
             dataSize = in.read(buffer);
             StringBuilder sb = new StringBuilder();

@@ -51,9 +51,7 @@ public class SettingsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 wifi_only = b;
                 if(b == false) {
-                    if(mainActivity != null) {
-                        mainActivity.downloadData.doInBackground(null);
-                    }
+                    Toast.makeText(mainActivity, "Please restart the app for downloading data. ", Toast.LENGTH_LONG*3).show();
                 } else {
                     Toast.makeText(mainActivity, "For future update, please turn off 'wifi-only' in 'Settings' and use mobile data, or connect wifi for downloading", Toast.LENGTH_LONG*3).show();
                 }
