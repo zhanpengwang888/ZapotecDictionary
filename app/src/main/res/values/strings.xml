@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Zapotec</string>
-    <string name="zapotec">Zapotec Pronunciation</string>
+    <string name="zapotec">Zapotec Pronounced By</string>
     <string name="def">Definition</string>
     <string name="wordDef">Word Definition</string>
     <string name="pic">Picture</string>

@@ -1,5 +1,7 @@
 package edu.haverford.cs.zapotecdictionary;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -13,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class WordViewFragment extends Fragment {
 
@@ -43,9 +47,21 @@ public class WordViewFragment extends Fragment {
                     mp.setDataSource(audiofp);
                     mp.prepare();
                     mp.start();
+                    TextView pronounce = view.findViewById(R.id.searchWords_psE);
+                    StringBuilder sb = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUTHORITY);
+                    if(sb != null && sb.length() > 0) {
+                        pronounce.setText("Zapotec pronounced by " + sb.toString());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
+                    if(sp.getBoolean("#1", false) == true) {
+                        Toast.makeText(getContext(), "Please select corresponding download option in the setting page to enable audio.", Toast.LENGTH_LONG*2).show();
+                    } else {
+                        Toast.makeText(getContext(), "The audio file has not been provided. ", Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "The audio file does not exist.", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -60,12 +76,15 @@ public class WordViewFragment extends Fragment {
 
         // set picture
         String pic = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_IMAGE).toString();
-        if(pic != null) {
+        if(pic != null && pic.length() != 0) {
             String pic_fp = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + pic;
 
             Bitmap bMap = BitmapFactory.decodeFile(pic_fp);
             img.setImageBitmap(bMap);
+        } else {
+            Bitmap noPic = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
+            img.setImageBitmap(noPic);
         }
         return view;
     }

@@ -16,7 +16,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 public class HistoryFragment extends Fragment {
 
@@ -116,9 +115,14 @@ public class HistoryFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
         if(sp != null) {
-            HashSet<String> hs = (HashSet<String>) sp.getStringSet("historyList", new HashSet<String>());
-            ArrayList<String> arrhs = new ArrayList<>(hs);
-            //Collections.reverse(arrhs);
+            ArrayList<String> arrhs = new ArrayList<>();
+            int size = sp.getInt("list_size", 0);
+            for(int i = 0; i < size; i++) {
+                String temp = sp.getString(Integer.toString(i), null);
+                if(temp != null) {
+                    arrhs.add(0, temp);
+                }
+            }
             historyOfWords.addAllToList(arrhs);
         }
         if(savedInstanceState != null) {

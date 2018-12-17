@@ -39,6 +39,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.zip.ZipEntry;
@@ -171,15 +172,20 @@ public class MainActivity  extends FragmentActivity
         SharedPreferences.Editor editor = sp.edit();
         if(sf.switchArr[0] == null) {
             for(int i = 0; i < sf.switchArr.length; i++) {
-                editor.putBoolean(Integer.toString(i), false);
+                editor.putBoolean("#"+Integer.toString(i), false);
             }
         } else {
             for(int i = 0; i < sf.switchArr.length; i++) {
-                editor.putBoolean(Integer.toString(i), sf.switchArr[i].isChecked());
+                editor.putBoolean("#"+Integer.toString(i), sf.switchArr[i].isChecked());
             }
         }
         editor.putBoolean("wifi", sf.wifi_only);
         editor.putStringSet("historyList", new LinkedHashSet<String>(hf.getHistoryList()));
+        editor.putInt("list_size", hf.getHistorySize());
+        ArrayList<String> hf_arr = hf.getHistoryList();
+        for(int i = 0; i < hf.getHistorySize(); i++) {
+            editor.putString(Integer.toString(i), hf_arr.get(i));
+        }
         editor.commit();
     }
 
@@ -563,7 +569,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             if(mActivity != null && mActivity.sf != null) {
                 wifi_only = mActivity.sf.getWifiOnly();
             }
-            if((wifi_only == false && mobile == NetworkInfo.State.CONNECTED) || wifiConnected) {
+            if( wifiConnected || (wifi_only == false && mobile == NetworkInfo.State.CONNECTED)) {
                 download("tlacochahuaya","1");
             } else {
                 toMakeaToast = true;
@@ -571,7 +577,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
             }
         } else {
             for(int i = 0; i < 4; i++) {
-                if(sp.getBoolean(Integer.toString(i), false)) {
+                if(sp.getBoolean("#"+Integer.toString(i), false)) {
                     target = i;
                     break;
                 }
