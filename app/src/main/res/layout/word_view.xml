@@ -40,10 +40,10 @@
 
             <ImageButton
                 android:id="@+id/searchWords_voiceE"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:adjustViewBounds="true"
-                android:paddingTop="1dp"
+                android:paddingTop="4dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
                 android:src="@drawable/voice" />
@@ -56,7 +56,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="7dp"
-                android:text="@string/zapotec"
+                android:text=""
                 android:textColor="#3B3C3D"
                 android:textSize="12dp" />
         </LinearLayout>
