@@ -47,11 +47,6 @@ public class WordViewFragment extends Fragment {
                     mp.setDataSource(audiofp);
                     mp.prepare();
                     mp.start();
-                    TextView pronounce = view.findViewById(R.id.searchWords_psE);
-                    StringBuilder sb = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUTHORITY);
-                    if(sb != null && sb.length() > 0) {
-                        pronounce.setText("Zapotec pronounced by " + sb.toString());
-                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                     SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
@@ -69,6 +64,13 @@ public class WordViewFragment extends Fragment {
         TextView word = view.findViewById(R.id.word_WordView);
         TextView wordEngDef = view.findViewById(R.id.word_eng_def);
         TextView wordEsDef = view.findViewById(R.id.word_es_def);
+
+        TextView pronounce = view.findViewById(R.id.searchWords_psE);
+        StringBuilder sb = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUTHORITY);
+        if(sb != null && sb.length() > 0) {
+            pronounce.setText("Zapotec pronounced by " + sb.toString());
+        }
+
         ImageView img = view.findViewById(R.id.word_pic);
         word.setText(db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_LANG).toString());
         wordEngDef.setText(db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_GLOSSARY).insert(0, "English: ").toString());
