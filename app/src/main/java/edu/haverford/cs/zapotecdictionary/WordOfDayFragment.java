@@ -1,5 +1,7 @@
 package edu.haverford.cs.zapotecdictionary;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -13,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class WordOfDayFragment extends Fragment {
     protected static DBHelper mDB;
@@ -53,8 +57,14 @@ public class WordOfDayFragment extends Fragment {
                         mp.setDataSource(audiofp);
                         mp.prepare();
                         mp.start();
+                    } catch (IOException e) {
+                        SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
+                        if(sp.getBoolean("#1", false)) {
+                            Toast.makeText(getContext(), "Please select corresponding download option in the setting page to enable audio.", Toast.LENGTH_LONG*2).show();
+                        } else {
+                            Toast.makeText(getContext(), "The audio file has not been provided. ", Toast.LENGTH_LONG).show();
+                        }
                     } catch (Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext(), "The audio file does not exist.", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }

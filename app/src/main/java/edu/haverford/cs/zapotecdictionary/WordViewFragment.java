@@ -50,7 +50,7 @@ public class WordViewFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                     SharedPreferences sp = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
-                    if(sp.getBoolean("#1", false) == true) {
+                    if(sp.getBoolean("#1", false)) {
                         Toast.makeText(getContext(), "Please select corresponding download option in the setting page to enable audio.", Toast.LENGTH_LONG*2).show();
                     } else {
                         Toast.makeText(getContext(), "The audio file has not been provided. ", Toast.LENGTH_LONG).show();
