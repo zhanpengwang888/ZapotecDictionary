@@ -69,11 +69,14 @@ public class WordOfDayFragment extends Fragment {
 
             // set picture
             String wordOfDay_pic = mDB.getInformationFromOID(randomOid, DBHelper.DICTIONARY_COLUMN_IMAGE).toString();
-            if (wordOfDay_pic != null) {
+            if (wordOfDay_pic.length() != 0) {
                 String wordOfDay_pic_fp = Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + wordOfDay_pic;
                 Bitmap bMap = BitmapFactory.decodeFile(wordOfDay_pic_fp);
                 image.setImageBitmap(bMap);
+            } else {
+                Bitmap noPic = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
+                image.setImageBitmap(noPic);
             }
         }
         return view;

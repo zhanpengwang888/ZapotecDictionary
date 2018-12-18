@@ -78,7 +78,7 @@ public class WordViewFragment extends Fragment {
 
         // set picture
         String pic = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_IMAGE).toString();
-        if(pic != null && pic.length() != 0) {
+        if(pic.length() != 0) {
             String pic_fp = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + pic;
 
