@@ -15,4 +15,13 @@
     <string name="update_full">Text, Full Audio and Images</string>
     <string name="write_perm_error">Cannot access local storage</string>
     <string name="arrow">&#8227;</string>
+    <string name="developers">This app is developed by Zhanpeng Wang, Jiaping Wang from Haverford College, and Eileen Feng, Ju Han Tarn from Bryn Mawr College.</string>
+    <string name="documentation">This is a dictionary app for people to learn Tlacochahuaya, an endangered Zapotec dialect. </string>
+    <string name="features">Features:
+        <br>1. Randomly selected words upon each start</br>
+        <br>2. Allow users to search in English/Spanish/Zapotec</br>
+        <br>3. Maintain users’ search history</br>
+        <br>4. Customized download options</br>
+    </string>
+    <string name="copyright">&#xa9; 2018 Zhanpeng Wang, Elieen Feng, Jiaping Wang, Ju Han Tarn</string>
 </resources>

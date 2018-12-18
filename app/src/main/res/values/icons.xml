@@ -3,4 +3,5 @@
     <string name="icon_search">&#xf002;</string>
     <string name="icon_history">&#x1F4DA;</string>
     <string name="icon_settings">&#x2699;</string>
+    <string name="icon_info">&#9432;</string>
 </resources>

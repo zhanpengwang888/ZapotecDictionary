@@ -1,6 +1,5 @@
 package edu.haverford.cs.zapotecdictionary;
 
-
 import android.Manifest;
 import android.app.ActionBar;
 import android.content.Context;
@@ -45,17 +44,16 @@ import java.util.LinkedHashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-
 public class MainActivity  extends FragmentActivity
                         implements ActivityCompat.OnRequestPermissionsResultCallback, SearchFragment.SendText{
 
-    //private ViewPager viewPager;
     protected ActionBar actionBar;
     protected WordViewFragment wf;
     protected HistoryFragment hf;
     protected SettingsFragment sf;
     protected SearchFragment searchFragment;
     protected WordOfDayFragment wordfrag;
+    protected AboutFragment aboutFragment;
     protected DBHelper db;
     private Bundle savedState;
     protected DownloadData downloadData;
@@ -69,13 +67,12 @@ public class MainActivity  extends FragmentActivity
         downloadData = new DownloadData(db, getSharedPreferences("info",  Context.MODE_PRIVATE), url, this);
         downloadData.execute();
 
-
         wf = new WordViewFragment();
         hf = new HistoryFragment();
         sf = new SettingsFragment();
         sf.setmActivity(this);
         searchFragment = new SearchFragment();
-
+        aboutFragment = new AboutFragment();
 
         if (savedInstanceState != null && savedState == null) {
             onRestoreInstanceState(savedInstanceState);
@@ -92,26 +89,17 @@ public class MainActivity  extends FragmentActivity
             requestPermissions(permission, R.integer.WRITE_GET_PERM);
         }
 
-
         wordfrag = new WordOfDayFragment();
         wf.setDB(db);
         hf.setDB(db);
         searchFragment.setDB(db);
         wordfrag.setDB(db);
-        //wordfrag.set_curID(db.getOidOfRandomRow());
-
-
 
         actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#91aaa7")));
         actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#cedbda")));
-
-        Drawable[] tabIcons = new Drawable[3];
-        tabIcons[0] = getResources().getDrawable(R.drawable.lookup);
-        tabIcons[1] = getResources().getDrawable(R.drawable.history);
-        tabIcons[2] = getResources().getDrawable(R.drawable.settings);
 
         ActionBar.Tab tab1 = actionBar.newTab();
         tab1.setIcon(getResources().getDrawable(R.drawable.lookup));
@@ -127,6 +115,12 @@ public class MainActivity  extends FragmentActivity
         tab3.setIcon(getResources().getDrawable(R.drawable.settings));
         tab3.setTabListener(new FragmentTabListener<SettingsFragment>(this, "Settings", SettingsFragment.class));
         actionBar.addTab(tab3);
+
+        ActionBar.Tab tab4 = actionBar.newTab();
+        tab4.setIcon(getResources().getDrawable(R.drawable.info));
+        tab4.setTabListener(new FragmentTabListener<AboutFragment>(this, "About", AboutFragment.class));
+        actionBar.addTab(tab4);
+
     }
 
     @Override public void sendText(int msg, boolean addHistory) {

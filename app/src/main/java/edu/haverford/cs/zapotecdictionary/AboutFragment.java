@@ -19,9 +19,7 @@ public class AboutFragment extends Fragment {
 
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle saved) {
         View view = inflater.inflate(R.layout.about_page, container, false);
-        TextView documentation = view.findViewById(R.id.documentation);
-        // TODO: waiting for the full documentation of the app from Ju Han
-        // documentation.setText(...);
+        //TextView documentation = view.findViewById(R.id.documentation);
         return view;
     }
 }

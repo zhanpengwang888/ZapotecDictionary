@@ -20,8 +20,17 @@
         android:id="@+id/documentation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Documentations"
-        android:layout_alignParentLeft="true"
+        android:text="@string/documentation"
+        android:layout_marginBottom="6dp"
+        android:layout_marginRight="14dip"
+        android:layout_marginLeft="14dip"
+        />
+
+    <TextView
+        android:id="@+id/features"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/features"
         android:layout_marginBottom="6dp"
         android:layout_marginRight="14dip"
         android:layout_marginLeft="14dip"
@@ -31,6 +40,30 @@
         android:id="@+id/about_developers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
         android:text="About Developers" />
+
+    <TextView
+        android:id="@+id/about_developers_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="14dip"
+        android:text="@string/developers" />
+
+    <TextView
+        android:id="@+id/about_license"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:text="Licenses: Apache 2.0" />
+
+    <TextView
+        android:id="@+id/copyright"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="14dip"
+        android:text="@string/copyright" />
 
 </LinearLayout>
