@@ -642,7 +642,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
         public String getLang() {
             if (this.lang != null) {
-                return this.lang.replace("&#8217;", "'").replace("&quot;", "\"");
+                return this.lang.replace("&#8217;", "'").replace("&quot;", "\"").replaceFirst(" ", "");
             }
             return null;
         }
@@ -656,7 +656,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
         public String getGloss() {
             if (this.gloss != null) {
-                return this.gloss.replace("&#8217;", "'").replace("&quot;", "\"");
+                return this.gloss.replace("&#8217;", "'").replace("&quot;", "\"").replaceFirst(" ", "");
             }
             return null;
         }
@@ -726,7 +726,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
         public String getEs_gloss() {
             if (this.es_gloss != null) {
-                return this.es_gloss.replace("&#8217;", "'").replace("&quot;", "\"");
+                return this.es_gloss.replace("&#8217;", "'").replace("&quot;", "\"").replaceFirst(" ", "");
             }
             return null;
         }

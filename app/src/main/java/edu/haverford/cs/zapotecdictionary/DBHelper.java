@@ -126,10 +126,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public ArrayList<Integer> getOidsForQueryMatchingString(String queryText) {
         ArrayList<Integer> oids = new ArrayList<>();
-        //queryText = Arrays.toString(queryText.split(" "));
+        if (queryText.contains("'")) {
+            queryText = queryText.replaceAll("'", "''");
+        }
         String queryString = "SELECT * FROM " + DICTIONARY_TABLE_NAME + " WHERE " +
-                DICTIONARY_COLUMN_ES_GLOSS + " LIKE " +"\'%" + queryText + "%\'" + " OR " + DICTIONARY_COLUMN_GLOSSARY
-                + " LIKE " + "\'%" + queryText + "%\'" + " OR " + DICTIONARY_COLUMN_LANG + " LIKE " + "\'%" + queryText +
+                DICTIONARY_COLUMN_ES_GLOSS + " LIKE " + "\'" + queryText + "%\'" + " OR " + DICTIONARY_COLUMN_GLOSSARY
+                + " LIKE " + "\'" + queryText + "%\'" + " OR " + DICTIONARY_COLUMN_LANG + " LIKE " + "\'" + queryText +
                 "%\'";
         mDB = this.getReadableDatabase();
         Cursor cur = mDB.rawQuery(queryString, null);
