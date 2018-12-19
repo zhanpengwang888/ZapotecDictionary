@@ -103,7 +103,7 @@ public class SettingsFragment extends Fragment {
         wifiSwitch.setChecked(sp.getBoolean("wifi", true));
         if(sp != null) {
             for(int i = 0; i < switchArr.length; i++) {
-                switchArr[i].setChecked(sp.getBoolean(Integer.toString(i), false));
+                switchArr[i].setChecked(sp.getBoolean("#"+Integer.toString(i), false));
             }
         }
         if(savedInstanceState != null) {

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -558,6 +557,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
         boolean wifiConnected = wifiNetwork != null && wifiNetwork.isConnected();
         NetworkInfo.State mobile = mobileNetwork.getState();
+
 
         if(sp == null) {
             if(mActivity != null && mActivity.sf != null) {
