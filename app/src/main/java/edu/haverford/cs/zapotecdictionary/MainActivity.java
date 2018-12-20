@@ -59,7 +59,7 @@ public class MainActivity  extends FragmentActivity
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
         db = new DBHelper(getApplicationContext());
         String url = "http://talkingdictionary.swarthmore.edu/dl/retrieve.php";
