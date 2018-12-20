@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 
 public class WordViewFragment extends Fragment {
@@ -38,7 +39,6 @@ public class WordViewFragment extends Fragment {
         imb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: if no audio downloaded yet display a message to user, same thing with pictures!
                 MediaPlayer mp = new MediaPlayer();
                 try {
                     String audiofn = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_AUDIO).toString();
@@ -78,10 +78,10 @@ public class WordViewFragment extends Fragment {
 
         // set picture
         String pic = db.getInformationFromOID(oid, DBHelper.DICTIONARY_COLUMN_IMAGE).toString();
-        if(pic.length() != 0) {
-            String pic_fp = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + pic;
-
+        String pic_fp = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + pic;
+        File word_pic = new File(pic_fp);
+        if(pic.length() != 0 && word_pic.exists()) {
             Bitmap bMap = BitmapFactory.decodeFile(pic_fp);
             img.setImageBitmap(bMap);
         } else {

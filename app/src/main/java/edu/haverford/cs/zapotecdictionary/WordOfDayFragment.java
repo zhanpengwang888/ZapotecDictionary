@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 
 public class WordOfDayFragment extends Fragment {
@@ -79,9 +80,10 @@ public class WordOfDayFragment extends Fragment {
 
             // set picture
             String wordOfDay_pic = mDB.getInformationFromOID(randomOid, DBHelper.DICTIONARY_COLUMN_IMAGE).toString();
-            if (wordOfDay_pic.length() != 0) {
-                String wordOfDay_pic_fp = Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + wordOfDay_pic;
+            String wordOfDay_pic_fp = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS).getPath() + "/dataFolder/tlacochahuaya_content/pix/" + wordOfDay_pic;
+            File word_pic = new File(wordOfDay_pic_fp);
+            if (wordOfDay_pic.length() != 0 && word_pic.exists()) {
                 Bitmap bMap = BitmapFactory.decodeFile(wordOfDay_pic_fp);
                 image.setImageBitmap(bMap);
             } else {
