@@ -20,7 +20,7 @@
         android:minSdkVersion="23"/>
     <uses-permission-sdk-23
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:minSdkVersion="23"/>android.permission.INTERNET
+        android:minSdkVersion="23"/>
     <uses-permission-sdk-23
         android:name="android.permission.INTERNET"
         android:minSdkVersion="23"/>
