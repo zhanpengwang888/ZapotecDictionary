@@ -396,9 +396,22 @@ class DownloadData extends AsyncTask<String, Void, Void> {
 
             } else if (responseCode == SUCCESS) {
                 in = con.getInputStream();
+
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int REQUEST_CODE_CONTACT = 101;
+                    String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                    for (String str : permissions) {
+                        if (mActivity.checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
+                            mActivity.requestPermissions(permissions, REQUEST_CODE_CONTACT);
+                            return;
+                        }
+                    }
+                }
+
                 File path = Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DOWNLOADS);
                 File file = new File(path, "update.zip");
+
                 out = new FileOutputStream(file, true);
                 dataSize = in.read(buffer);
                 while (dataSize > 0) {
