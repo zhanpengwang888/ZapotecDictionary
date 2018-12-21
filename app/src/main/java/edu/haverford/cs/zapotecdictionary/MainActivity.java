@@ -534,6 +534,7 @@ class DownloadData extends AsyncTask<String, Void, Void> {
                     reader.close();
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
