@@ -35,4 +35,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.shamanland:fonticon:0.1.9'
     implementation 'com.google.code.gson:gson:2.8.5'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
 }
